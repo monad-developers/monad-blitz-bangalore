@@ -1,2 +1,1 @@
-# monad-blitz-bangalore
-Monad Blitz Bangalore Submissions
+# my blitz project

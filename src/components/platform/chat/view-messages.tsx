@@ -52,7 +52,7 @@ export const ViewMessages = ({
 
                 return (
                   <div key={result}>
-                    {toolName === 'getbalance' ? (
+                    {toolName === 'getmonadbalance' ? (
                       <BalanceCheck RecievedResult={result} />
                     ) : toolName === 'transfersui' ? (
                       <TransferMod

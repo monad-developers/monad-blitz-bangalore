@@ -3,7 +3,7 @@ import { tool } from 'ai';
 import { ethers } from 'ethers';
 import { provider } from './utils';
 
-export const getMonadBalance = tool({
+export const getmonadbalance = tool({
   description:
     'Get the native token balances for a given wallet address on Monad testnet.',
   parameters: z.object({

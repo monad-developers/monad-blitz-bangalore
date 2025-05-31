@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Plus, Shield, Clock, AlertTriangle, CheckCircle, DollarSign, User, FileText, XCircle, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import CreateEscrowModal from './CreateEscrowModal';
 import DisputeModal from './DisputeModal';
+import ShareApprovalLink from './ShareApprovalLink';
 
 interface ClientDashboardProps {
   userAddress: string;
@@ -259,6 +259,11 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ userAddress }) => {
                           Approve Work
                         </Button>
                       )}
+                      <ShareApprovalLink
+                        escrowId={escrow.id}
+                        freelancerTelegram={escrow.receiverTelegram}
+                        description={escrow.description}
+                      />
                       <Button
                         size="sm"
                         variant="outline"

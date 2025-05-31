@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Plus, Shield, Clock, AlertTriangle, CheckCircle, DollarSign, User } from 'lucide-react';
+import { Plus, Shield, Clock, AlertTriangle, CheckCircle, DollarSign, User, FileText, XCircle, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -17,7 +17,7 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ userAddress }) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedEscrowForDispute, setSelectedEscrowForDispute] = useState<number | null>(null);
 
-  // Mock data for client's sent escrows
+  // Mock data for client's sent escrows with additional status fields
   const clientEscrows = [
     {
       id: 1,
@@ -27,7 +27,11 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ userAddress }) => {
       deadline: '2024-06-15',
       status: 'active',
       receiverTelegram: '@bob_designer',
-      description: 'Website redesign project'
+      description: 'Website redesign project',
+      workSubmitted: false,
+      clientApproved: false,
+      freelancerAccepted: true,
+      daysOverdue: 0
     },
     {
       id: 2,
@@ -37,7 +41,11 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ userAddress }) => {
       deadline: '2024-06-20',
       status: 'expired',
       receiverTelegram: '@diana_writer',
-      description: 'Content writing services'
+      description: 'Content writing services',
+      workSubmitted: true,
+      clientApproved: false,
+      freelancerAccepted: false,
+      daysOverdue: 3
     }
   ];
 
@@ -57,6 +65,14 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ userAddress }) => {
     });
   };
 
+  const handleApproveWork = (escrowId: number) => {
+    console.log('Approving work for escrow:', escrowId);
+    toast({
+      title: "Work Approved",
+      description: "You have approved the submitted work. Freelancer can now claim payment.",
+    });
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
@@ -70,6 +86,59 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ userAddress }) => {
       default:
         return <Badge variant="secondary">Unknown</Badge>;
     }
+  };
+
+  const getAdditionalTags = (escrow: any) => {
+    const tags = [];
+
+    // Freelancer acceptance status
+    if (!escrow.freelancerAccepted) {
+      tags.push(
+        <Badge key="not-accepted" className="bg-orange-100 text-orange-800">
+          <XCircle className="w-3 h-3 mr-1" />
+          Not Accepted by Freelancer
+        </Badge>
+      );
+    }
+
+    // Work submission status
+    if (escrow.workSubmitted && !escrow.clientApproved && escrow.status === 'active') {
+      tags.push(
+        <Badge key="pending-approval" className="bg-purple-100 text-purple-800">
+          <FileText className="w-3 h-3 mr-1" />
+          Pending Your Approval
+        </Badge>
+      );
+    } else if (!escrow.workSubmitted && escrow.freelancerAccepted && escrow.status === 'active') {
+      tags.push(
+        <Badge key="work-not-submitted" className="bg-gray-100 text-gray-800">
+          <Clock className="w-3 h-3 mr-1" />
+          Work Not Submitted
+        </Badge>
+      );
+    }
+
+    // Client approval status
+    if (escrow.clientApproved) {
+      tags.push(
+        <Badge key="approved" className="bg-green-100 text-green-800">
+          <CheckCircle className="w-3 h-3 mr-1" />
+          Work Approved
+        </Badge>
+      );
+    }
+
+    // Overdue status
+    if (escrow.daysOverdue > 0) {
+      tags.push(
+        <Badge key="overdue" className="bg-red-100 text-red-800">
+          <Calendar className="w-3 h-3 mr-1" />
+          {escrow.daysOverdue} Days Overdue
+        </Badge>
+      );
+    }
+
+    return tags;
   };
 
   return (
@@ -143,7 +212,10 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ userAddress }) => {
                     <h4 className="font-semibold">Escrow #{escrow.id}</h4>
                     <p className="text-gray-300 text-sm">{escrow.description}</p>
                   </div>
-                  {getStatusBadge(escrow.status)}
+                  <div className="flex flex-wrap gap-2">
+                    {getStatusBadge(escrow.status)}
+                    {getAdditionalTags(escrow)}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
@@ -165,7 +237,7 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ userAddress }) => {
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   {escrow.status === 'expired' && (
                     <Button
                       size="sm"
@@ -177,6 +249,16 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({ userAddress }) => {
                   )}
                   {escrow.status === 'active' && (
                     <>
+                      {escrow.workSubmitted && !escrow.clientApproved && (
+                        <Button
+                          size="sm"
+                          onClick={() => handleApproveWork(escrow.id)}
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          <CheckCircle className="w-4 h-4 mr-1" />
+                          Approve Work
+                        </Button>
+                      )}
                       <Button
                         size="sm"
                         variant="outline"

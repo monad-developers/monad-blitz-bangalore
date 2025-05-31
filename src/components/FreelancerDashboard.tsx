@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Clock, CheckCircle, AlertTriangle, DollarSign, User, FileText } from 'lucide-react';
+import { Clock, CheckCircle, AlertTriangle, DollarSign, User, FileText, XCircle, Calendar, ThumbsUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -15,7 +15,7 @@ const FreelancerDashboard: React.FC<FreelancerDashboardProps> = ({ userAddress }
   const { toast } = useToast();
   const [selectedEscrowForDispute, setSelectedEscrowForDispute] = useState<number | null>(null);
 
-  // Mock data for freelancer's received escrows
+  // Mock data for freelancer's received escrows with additional status fields
   const receivedEscrows = [
     {
       id: 3,
@@ -26,7 +26,11 @@ const FreelancerDashboard: React.FC<FreelancerDashboardProps> = ({ userAddress }
       status: 'active',
       senderTelegram: '@eve_startup',
       description: 'Smart contract audit',
-      workSubmitted: false
+      workSubmitted: false,
+      clientApproved: false,
+      freelancerAccepted: true,
+      daysUntilDeadline: 7,
+      clientWaitingForWork: true
     },
     {
       id: 4,
@@ -37,7 +41,11 @@ const FreelancerDashboard: React.FC<FreelancerDashboardProps> = ({ userAddress }
       status: 'active',
       senderTelegram: '@alice_ceo',
       description: 'Logo design project',
-      workSubmitted: true
+      workSubmitted: true,
+      clientApproved: false,
+      freelancerAccepted: true,
+      daysUntilDeadline: 2,
+      clientWaitingForWork: false
     }
   ];
 
@@ -57,6 +65,14 @@ const FreelancerDashboard: React.FC<FreelancerDashboardProps> = ({ userAddress }
     });
   };
 
+  const handleAcceptProject = (escrowId: number) => {
+    console.log('Accepting project for escrow:', escrowId);
+    toast({
+      title: "Project Accepted",
+      description: "You have accepted this project. You can now start working on it.",
+    });
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
@@ -70,6 +86,76 @@ const FreelancerDashboard: React.FC<FreelancerDashboardProps> = ({ userAddress }
       default:
         return <Badge variant="secondary">Unknown</Badge>;
     }
+  };
+
+  const getAdditionalTags = (escrow: any) => {
+    const tags = [];
+
+    // Project acceptance status
+    if (!escrow.freelancerAccepted) {
+      tags.push(
+        <Badge key="pending-acceptance" className="bg-orange-100 text-orange-800">
+          <Clock className="w-3 h-3 mr-1" />
+          Pending Your Acceptance
+        </Badge>
+      );
+    }
+
+    // Work submission status
+    if (escrow.workSubmitted && !escrow.clientApproved) {
+      tags.push(
+        <Badge key="pending-client-approval" className="bg-purple-100 text-purple-800">
+          <FileText className="w-3 h-3 mr-1" />
+          Awaiting Client Approval
+        </Badge>
+      );
+    } else if (!escrow.workSubmitted && escrow.freelancerAccepted) {
+      tags.push(
+        <Badge key="work-pending" className="bg-gray-100 text-gray-800">
+          <FileText className="w-3 h-3 mr-1" />
+          Work Not Submitted
+        </Badge>
+      );
+    }
+
+    // Client approval status
+    if (escrow.clientApproved) {
+      tags.push(
+        <Badge key="approved-ready-claim" className="bg-green-100 text-green-800">
+          <ThumbsUp className="w-3 h-3 mr-1" />
+          Approved - Ready to Claim
+        </Badge>
+      );
+    }
+
+    // Deadline urgency
+    if (escrow.daysUntilDeadline <= 1 && escrow.daysUntilDeadline > 0) {
+      tags.push(
+        <Badge key="urgent" className="bg-red-100 text-red-800">
+          <AlertTriangle className="w-3 h-3 mr-1" />
+          Due Tomorrow
+        </Badge>
+      );
+    } else if (escrow.daysUntilDeadline <= 3 && escrow.daysUntilDeadline > 1) {
+      tags.push(
+        <Badge key="soon" className="bg-yellow-100 text-yellow-800">
+          <Calendar className="w-3 h-3 mr-1" />
+          Due Soon ({escrow.daysUntilDeadline} days)
+        </Badge>
+      );
+    }
+
+    // Client waiting status
+    if (escrow.clientWaitingForWork && escrow.freelancerAccepted && !escrow.workSubmitted) {
+      tags.push(
+        <Badge key="client-waiting" className="bg-blue-100 text-blue-800">
+          <User className="w-3 h-3 mr-1" />
+          Client Waiting for Deliverable
+        </Badge>
+      );
+    }
+
+    return tags;
   };
 
   const getDaysUntilDeadline = (deadline: string) => {
@@ -141,13 +227,9 @@ const FreelancerDashboard: React.FC<FreelancerDashboardProps> = ({ userAddress }
                     <h4 className="font-semibold">Project #{escrow.id}</h4>
                     <p className="text-gray-300 text-sm">{escrow.description}</p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {getStatusBadge(escrow.status)}
-                    {escrow.workSubmitted && (
-                      <Badge className="bg-purple-100 text-purple-800">
-                        <FileText className="w-3 h-3 mr-1" />Work Submitted
-                      </Badge>
-                    )}
+                    {getAdditionalTags(escrow)}
                   </div>
                 </div>
 
@@ -171,10 +253,19 @@ const FreelancerDashboard: React.FC<FreelancerDashboardProps> = ({ userAddress }
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   {escrow.status === 'active' && (
                     <>
-                      {!escrow.workSubmitted ? (
+                      {!escrow.freelancerAccepted ? (
+                        <Button
+                          size="sm"
+                          onClick={() => handleAcceptProject(escrow.id)}
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          <CheckCircle className="w-4 h-4 mr-1" />
+                          Accept Project
+                        </Button>
+                      ) : !escrow.workSubmitted ? (
                         <Button
                           size="sm"
                           onClick={() => handleSubmitWork(escrow.id)}
@@ -183,7 +274,7 @@ const FreelancerDashboard: React.FC<FreelancerDashboardProps> = ({ userAddress }
                           <FileText className="w-4 h-4 mr-1" />
                           Submit Work
                         </Button>
-                      ) : (
+                      ) : escrow.clientApproved ? (
                         <Button
                           size="sm"
                           onClick={() => handleClaimFunds(escrow.id)}
@@ -192,16 +283,19 @@ const FreelancerDashboard: React.FC<FreelancerDashboardProps> = ({ userAddress }
                           <CheckCircle className="w-4 h-4 mr-1" />
                           Claim Payment
                         </Button>
+                      ) : null}
+                      
+                      {escrow.freelancerAccepted && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setSelectedEscrowForDispute(escrow.id)}
+                          className="border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-white"
+                        >
+                          <AlertTriangle className="w-4 h-4 mr-1" />
+                          Flag Dispute
+                        </Button>
                       )}
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setSelectedEscrowForDispute(escrow.id)}
-                        className="border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-white"
-                      >
-                        <AlertTriangle className="w-4 h-4 mr-1" />
-                        Flag Dispute
-                      </Button>
                     </>
                   )}
                 </div>

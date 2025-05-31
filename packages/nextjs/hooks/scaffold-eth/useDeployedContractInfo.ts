@@ -23,7 +23,7 @@ export function useDeployedContractInfo<TContractName extends ContractName>(
   config: UseDeployedContractConfig<TContractName>,
 ): DeployedContractData<TContractName>;
 /**
- * @deprecated Use object parameter version instead: useDeployedContractInfo({ contractName: "YourContract" })
+ * @deprecated Use object parameter version instead: useDeployedContractInfo({ contractName: "Monaswipe" })
  */
 export function useDeployedContractInfo<TContractName extends ContractName>(
   contractName: TContractName,

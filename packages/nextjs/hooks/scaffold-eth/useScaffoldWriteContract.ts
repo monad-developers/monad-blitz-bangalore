@@ -37,7 +37,7 @@ export function useScaffoldWriteContract<TContractName extends ContractName>(
   config: UseScaffoldWriteConfig<TContractName>,
 ): ScaffoldWriteContractReturnType<TContractName>;
 /**
- * @deprecated Use object parameter version instead: useScaffoldWriteContract({ contractName: "YourContract" })
+ * @deprecated Use object parameter version instead: useScaffoldWriteContract({ contractName: "Monaswipe" })
  */
 export function useScaffoldWriteContract<TContractName extends ContractName>(
   contractName: TContractName,

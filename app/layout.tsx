@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Manrope } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/src/components/ui/sonner';
+import { Web3Provider } from '@/src/components/globals/providers';
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -26,7 +27,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <Toaster position={'top-right'} />
-        {children}
+        <Web3Provider>{children}</Web3Provider>
       </body>
     </html>
   );

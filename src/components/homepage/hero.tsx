@@ -11,7 +11,7 @@ export const MarketingHero = () => {
     <section className="overflow-x-clip py-24 md:py-52">
       <div className="container">
         <p className="text-center text-xl font-extrabold text-zinc-400">
-          An Agentic Chat web app based that let's you interact with Monad
+          An Agentic Chat web app based that let&aposs you interact with Monad
           Blockchain
         </p>
         <h1 className="mx-auto mt-5 max-w-4xl text-center text-5xl font-black uppercase md:text-6xl">

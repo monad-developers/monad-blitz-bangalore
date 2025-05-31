@@ -52,7 +52,7 @@ export default function Page() {
             <div className="flex flex-col items-center justify-center gap-2 text-center">
               <h3 className="text-xl font-semibold dark:text-zinc-50">Login</h3>
               <p className="text-sm text-gray-500 dark:text-zinc-400">
-                Login into CryptAI
+                Login into ModAI
               </p>
             </div>
 

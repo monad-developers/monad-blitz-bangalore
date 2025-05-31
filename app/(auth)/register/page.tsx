@@ -57,7 +57,7 @@ export default function Page() {
                 Sign Up
               </h3>
               <p className="text-sm text-gray-500 dark:text-zinc-400">
-                Create an account on CryptAI
+                Create an account on ModAI
               </p>
             </div>
 

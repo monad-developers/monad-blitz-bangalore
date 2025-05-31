@@ -1,0 +1,6 @@
+{
+  "intent": "send",
+  "amount": "0.01 eth",
+  "recipient": "gokul",
+  "reason": null
+}

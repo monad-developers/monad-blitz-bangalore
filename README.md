@@ -248,15 +248,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 Links
 
-- **Live Demo**: [https://chainjump.vercel.app](https://chainjump.vercel.app)
-- **Monad Testnet Explorer**: [https://testnet.monadexplorer.com/](https://testnet.monadexplorer.com/)
-- **Documentation**: [https://docs.chainjump.io](https://docs.chainjump.io)
+- **Monad Testnet Explorer**: [https://testnet.monadexplorer.com/address/0x456F88C4A2F6dA77B78FB93AafD57306efaD186f?tab=Transaction&portfolio=Info](https://testnet.monadexplorer.com/address/0x456F88C4A2F6dA77B78FB93AafD57306efaD186f?tab=Transaction&portfolio=Info)
 
-## 🆘 Support
 
-- **Discord**: [Join our community](https://discord.gg/chainjump)
-- **Twitter**: [@ChainJumpGame](https://twitter.com/ChainJumpGame)
-- **Email**: support@chainjump.io
 
 ## 🙏 Acknowledgments
 

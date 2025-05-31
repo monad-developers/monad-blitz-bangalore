@@ -186,7 +186,6 @@ contract CleanChain {
         address _admin
     ) 
         external 
-        isOwner
         whenNotPaused
     {
         require(bytes(_name).length > 0, "Neighborhood name cannot be empty");
@@ -222,7 +221,6 @@ contract CleanChain {
         address _newAdmin
     ) 
         external 
-        isOwner
         whenNotPaused
     {
         require(neighborhoods[_neighborhood].isActive, "Neighborhood doesn't exist");

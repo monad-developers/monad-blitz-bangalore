@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   10143: {
     CleanChain: {
-      address: "0x769f629C4bd12E3A714ccf72A6c1936940a4c1BC",
+      address: "0x65f38A7704Aa141f7502599DbeFeFE57bECf33fe",
       abi: [
         {
           inputs: [

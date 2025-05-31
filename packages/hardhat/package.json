@@ -18,6 +18,7 @@
     "hardhat-verify": "hardhat verify",
     "lint": "eslint",
     "lint-staged": "eslint",
+    "populate-neighborhoods": "hardhat run scripts/populate-neighborhoods.js --network monadTestnet",
     "test": "REPORT_GAS=true hardhat test --network hardhat",
     "verify": "hardhat etherscan-verify"
   },

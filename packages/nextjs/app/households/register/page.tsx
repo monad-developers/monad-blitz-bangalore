@@ -3,16 +3,17 @@
 import { useState } from "react";
 import { useAccount } from "wagmi";
 import { 
-  UserGroupIcon,
+  HomeIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
   ArrowPathIcon,
   Bars3Icon,
   XMarkIcon,
   StarIcon,
-  ShieldCheckIcon,
-  CameraIcon,
-  ClockIcon
+  UsersIcon,
+  MapPinIcon,
+  ClockIcon,
+  BuildingOfficeIcon
 } from "@heroicons/react/24/outline";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
@@ -29,14 +30,14 @@ const Navigation = () => {
           GreenGrid
         </a>
         <div className="hidden sm:block text-emerald-400/60 text-lg">•</div>
-        <span className="hidden sm:block text-emerald-200/80 text-sm 2xl:text-base font-medium">Cleaner Registration</span>
+        <span className="hidden sm:block text-emerald-200/80 text-sm 2xl:text-base font-medium">Household Registration</span>
       </div>
 
       <div className="hidden lg:flex items-center gap-6 xl:gap-8 2xl:gap-12">
-        <a href="/households/register" className="text-emerald-100/80 hover:text-emerald-200 text-base 2xl:text-lg font-medium transition-colors">
+        <a href="/households/register" className="text-emerald-200 text-base 2xl:text-lg font-medium">
           Household
         </a>
-        <a href="/clean/log" className="text-emerald-200 text-base 2xl:text-lg font-medium">
+        <a href="/clean/log" className="text-emerald-100/80 hover:text-emerald-200 text-base 2xl:text-lg font-medium transition-colors">
           Cleaner
         </a>
         <a href="/validate" className="text-emerald-100/80 hover:text-emerald-200 text-base 2xl:text-lg font-medium transition-colors">
@@ -77,37 +78,45 @@ const Navigation = () => {
   );
 };
 
-// Main Cleaner Registration Card Component
-const CleanerRegistrationCard = () => {
+// Main Household Registration Card Component
+const HouseholdRegistrationCard = () => {
   const { address } = useAccount();
   const [isRegistering, setIsRegistering] = useState(false);
+  const [selectedNeighborhood, setSelectedNeighborhood] = useState("");
+  const [residents, setResidents] = useState(1);
 
   const { writeContractAsync: writeCleanChain } = useScaffoldWriteContract({
     contractName: "CleanChain",
   });
 
-  // Check if user is already registered as cleaner
-  const { data: isRegisteredCleaner } = useScaffoldReadContract({
-    contractName: "CleanChain",
-    functionName: "isRegisteredCleaner",
-    args: [address],
-  });
-
-  // Check if user is registered as house (can't be both)
+  // Check if user is already registered as house
   const { data: isRegisteredHouse } = useScaffoldReadContract({
     contractName: "CleanChain",
     functionName: "isRegisteredHouse",
     args: [address],
   });
 
-  // Get cleaner data if already registered
-  const { data: cleanerData } = useScaffoldReadContract({
+  // Check if user is registered as cleaner (can't be both)
+  const { data: isRegisteredCleaner } = useScaffoldReadContract({
     contractName: "CleanChain",
-    functionName: "getCleaner",
+    functionName: "isRegisteredCleaner",
+    args: [address],
+  });
+
+  // Get house data if already registered
+  const { data: houseData } = useScaffoldReadContract({
+    contractName: "CleanChain",
+    functionName: "getHouse",
     args: [address],
     query: {
-      enabled: isRegisteredCleaner,
+      enabled: isRegisteredHouse,
     },
+  });
+
+  // Get all neighborhoods
+  const { data: neighborhoods } = useScaffoldReadContract({
+    contractName: "CleanChain",
+    functionName: "getAllNeighborhoods",
   });
 
   // Contract status
@@ -117,12 +126,13 @@ const CleanerRegistrationCard = () => {
   });
 
   const handleRegister = async () => {
-    if (!address) return;
+    if (!address || !selectedNeighborhood || residents < 1 || residents > 20) return;
     
     setIsRegistering(true);
     try {
       await writeCleanChain({
-        functionName: "registerCleaner",
+        functionName: "registerHouse",
+        args: [selectedNeighborhood, residents],
       });
     } catch (error) {
       console.error("Registration failed:", error);
@@ -136,12 +146,12 @@ const CleanerRegistrationCard = () => {
       <div className="bg-white/5 border border-green-900/30 rounded-xl lg:rounded-2xl backdrop-blur-md overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-emerald-600/20 to-green-600/20 border-b border-green-900/30 p-6 sm:p-8 lg:p-10 text-center">
-          <UserGroupIcon className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-emerald-400 mx-auto mb-4 lg:mb-6" />
+          <HomeIcon className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-emerald-400 mx-auto mb-4 lg:mb-6" />
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-emerald-100 mb-3 lg:mb-4">
-            Cleaner Registration
+            Household Registration
           </h1>
           <p className="text-emerald-100/80 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed">
-            Join the GreenGrid network as a cleaner and start earning points for your garbage collection services. Help keep neighborhoods clean and earn rewards.
+            Register your household in the GreenGrid network to track garbage collection, confirm pickups, and earn points for participating in community cleanliness.
           </p>
         </div>
 
@@ -162,15 +172,15 @@ const CleanerRegistrationCard = () => {
             </div>
           )}
 
-          {/* Already Registered as House Warning */}
-          {isRegisteredHouse && (
+          {/* Already Registered as Cleaner Warning */}
+          {isRegisteredCleaner && (
             <div className="bg-yellow-500/10 border border-yellow-400/30 rounded-lg p-4 lg:p-6 mb-6">
               <div className="flex items-start gap-3">
                 <ExclamationTriangleIcon className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-yellow-300 font-medium mb-2">Already Registered as House</h4>
+                  <h4 className="text-yellow-300 font-medium mb-2">Already Registered as Cleaner</h4>
                   <p className="text-yellow-200/80 text-sm lg:text-base">
-                    This address is already registered as a house. You cannot register as both a house and a cleaner with the same address.
+                    This address is already registered as a cleaner. You cannot register as both a house and a cleaner with the same address.
                   </p>
                 </div>
               </div>
@@ -178,7 +188,7 @@ const CleanerRegistrationCard = () => {
           )}
 
           {/* Already Registered Success */}
-          {isRegisteredCleaner && cleanerData ? (
+          {isRegisteredHouse && houseData ? (
             <div className="space-y-6 lg:space-y-8">
               <div className="text-center py-8 lg:py-12">
                 <CheckCircleIcon className="w-16 h-16 lg:w-20 lg:h-20 text-green-400 mx-auto mb-4" />
@@ -186,38 +196,43 @@ const CleanerRegistrationCard = () => {
                   Registration Complete!
                 </h3>
                 <p className="text-green-200/80 mb-6 text-base lg:text-lg">
-                  You are successfully registered as a cleaner in the GreenGrid network.
+                  Your household is successfully registered in the GreenGrid network.
                 </p>
               </div>
 
-              {/* Cleaner Stats */}
+              {/* House Stats */}
               <div className="bg-black/20 border border-green-900/30 rounded-lg p-4 lg:p-6">
                 <h4 className="text-emerald-200 font-medium mb-4 flex items-center gap-2">
                   <StarIcon className="w-5 h-5" />
-                  Your Cleaner Profile
+                  Your Household Profile
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="text-center">
-                    <div className="text-xl lg:text-2xl font-bold text-emerald-200">{cleanerData.points?.toString()}</div>
+                    <div className="text-xl lg:text-2xl font-bold text-emerald-200">{houseData.points?.toString()}</div>
                     <div className="text-emerald-100/60 text-sm">Points</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-xl lg:text-2xl font-bold text-emerald-200">{cleanerData.reputation?.toString()}</div>
-                    <div className="text-emerald-100/60 text-sm">Reputation</div>
+                    <div className="text-xl lg:text-2xl font-bold text-emerald-200">{houseData.residents?.toString()}</div>
+                    <div className="text-emerald-100/60 text-sm">Residents</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-xl lg:text-2xl font-bold text-emerald-200">{cleanerData.assignedNeighborhoods?.length || 0}</div>
-                    <div className="text-emerald-100/60 text-sm">Neighborhoods</div>
+                    <div className="text-xl lg:text-2xl font-bold text-emerald-200">{houseData.collectionHashes?.length || 0}</div>
+                    <div className="text-emerald-100/60 text-sm">Collections</div>
                   </div>
                 </div>
                 <div className="mt-4 pt-4 border-t border-green-900/30">
                   <div className="flex items-center gap-2 text-emerald-100/70 text-sm">
+                    <MapPinIcon className="w-4 h-4" />
+                    <span>Neighborhood:</span>
+                    <span className="font-medium">{houseData.neighborhood}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-emerald-100/70 text-sm mt-2">
                     <span>Wallet Address:</span>
-                    <Address address={cleanerData.wallet} />
+                    <Address address={houseData.wallet} />
                   </div>
                   <div className="flex items-center gap-2 text-emerald-100/70 text-sm mt-2">
                     <span>Registration Date:</span>
-                    <span>{new Date(Number(cleanerData.registrationTimestamp) * 1000).toLocaleDateString()}</span>
+                    <span>{new Date(Number(houseData.registrationTimestamp) * 1000).toLocaleDateString()}</span>
                   </div>
                 </div>
               </div>
@@ -234,8 +249,8 @@ const CleanerRegistrationCard = () => {
                       <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
                     </div>
                     <div>
-                      <h5 className="text-emerald-200 font-medium">Get Neighborhood Authorization</h5>
-                      <p className="text-emerald-100/70 text-sm">Contact neighborhood admins to get assigned to areas where you can collect garbage.</p>
+                      <h5 className="text-emerald-200 font-medium">Monitor Collection Events</h5>
+                      <p className="text-emerald-100/70 text-sm">Track when cleaners collect garbage from your household and receive notifications.</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -243,8 +258,8 @@ const CleanerRegistrationCard = () => {
                       <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
                     </div>
                     <div>
-                      <h5 className="text-emerald-200 font-medium">Start Logging Collections</h5>
-                      <p className="text-emerald-100/70 text-sm">Begin recording your garbage collection activities with photo proof to earn points.</p>
+                      <h5 className="text-emerald-200 font-medium">Confirm Collections</h5>
+                      <p className="text-emerald-100/70 text-sm">Validate garbage collection activities to help cleaners earn reputation and bonus points.</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -252,8 +267,8 @@ const CleanerRegistrationCard = () => {
                       <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
                     </div>
                     <div>
-                      <h5 className="text-emerald-200 font-medium">Build Your Reputation</h5>
-                      <p className="text-emerald-100/70 text-sm">Maintain high confirmation rates to increase your reputation and unlock new opportunities.</p>
+                      <h5 className="text-emerald-200 font-medium">Earn Points</h5>
+                      <p className="text-emerald-100/70 text-sm">Accumulate points for confirming collections and participating in the network.</p>
                     </div>
                   </div>
                 </div>
@@ -262,18 +277,18 @@ const CleanerRegistrationCard = () => {
               {/* Action Buttons */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <a 
-                  href="/clean" 
+                  href="/households/confirm" 
                   className="flex items-center justify-center gap-2 px-6 py-4 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-500 hover:scale-[1.02] transition-all duration-300 text-base lg:text-lg"
                 >
-                  <ShieldCheckIcon className="w-5 h-5" />
-                  Go to Dashboard
+                  <CheckCircleIcon className="w-5 h-5" />
+                  Confirm Collections
                 </a>
                 <a 
-                  href="/clean/log" 
+                  href="/" 
                   className="flex items-center justify-center gap-2 px-6 py-4 bg-emerald-600/20 border border-emerald-400/30 text-emerald-200 font-semibold rounded-lg hover:bg-emerald-600/30 hover:scale-[1.02] transition-all duration-300 text-base lg:text-lg"
                 >
-                  <CameraIcon className="w-5 h-5" />
-                  Log Collection
+                  <HomeIcon className="w-5 h-5" />
+                  Go to Dashboard
                 </a>
               </div>
             </div>
@@ -285,27 +300,77 @@ const CleanerRegistrationCard = () => {
                 <div className="bg-black/20 border border-green-900/30 rounded-lg p-4 lg:p-6">
                   <h4 className="text-emerald-200 font-medium mb-3 flex items-center gap-2">
                     <StarIcon className="w-5 h-5 text-yellow-400" />
-                    Earn Points & Reputation
+                    Household Benefits
                   </h4>
                   <ul className="text-emerald-100/70 text-sm lg:text-base space-y-2">
                     <li>• 10 points for registration</li>
-                    <li>• 20 points per garbage collection</li>
-                    <li>• 10 bonus points for confirmations</li>
-                    <li>• Build reputation for more opportunities</li>
+                    <li>• 15 points per collection confirmation</li>
+                    <li>• Track garbage collection history</li>
+                    <li>• Contribute to community cleanliness</li>
                   </ul>
                 </div>
 
                 <div className="bg-black/20 border border-green-900/30 rounded-lg p-4 lg:p-6">
                   <h4 className="text-emerald-200 font-medium mb-3 flex items-center gap-2">
-                    <CheckCircleIcon className="w-5 h-5 text-green-400" />
-                    Network Benefits
+                    <BuildingOfficeIcon className="w-5 h-5 text-green-400" />
+                    Network Features
                   </h4>
                   <ul className="text-emerald-100/70 text-sm lg:text-base space-y-2">
-                    <li>• Access to multiple neighborhoods</li>
-                    <li>• Transparent tracking system</li>
-                    <li>• Decentralized verification</li>
-                    <li>• Community recognition</li>
+                    <li>• Transparent collection tracking</li>
+                    <li>• Verification system for cleaners</li>
+                    <li>• Neighborhood-based organization</li>
+                    <li>• Decentralized validation</li>
                   </ul>
+                </div>
+              </div>
+
+              {/* Registration Form */}
+              <div className="bg-black/20 border border-green-900/30 rounded-lg p-4 lg:p-6">
+                <h4 className="text-emerald-200 font-medium mb-4 flex items-center gap-2">
+                  <HomeIcon className="w-5 h-5" />
+                  Registration Details
+                </h4>
+                
+                <div className="space-y-4">
+                  {/* Neighborhood Selection */}
+                  <div>
+                    <label className="block text-emerald-200 text-sm font-medium mb-2">
+                      Select Neighborhood *
+                    </label>
+                    <select
+                      value={selectedNeighborhood}
+                      onChange={(e) => setSelectedNeighborhood(e.target.value)}
+                      className="w-full px-3 py-2 bg-black/40 border border-green-900/30 rounded-lg text-emerald-100 focus:border-emerald-400 focus:outline-none"
+                      disabled={!neighborhoods || neighborhoods.length === 0}
+                    >
+                      <option value="">Choose your neighborhood...</option>
+                      {neighborhoods?.map((neighborhood: string) => (
+                        <option key={neighborhood} value={neighborhood}>
+                          {neighborhood}
+                        </option>
+                      ))}
+                    </select>
+                    {(!neighborhoods || neighborhoods.length === 0) && (
+                      <p className="text-yellow-400 text-xs mt-1">No neighborhoods available. Contact an admin to create neighborhoods.</p>
+                    )}
+                  </div>
+
+                  {/* Residents Count */}
+                  <div>
+                    <label className="block text-emerald-200 text-sm font-medium mb-2">
+                      Number of Residents *
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="20"
+                      value={residents}
+                      onChange={(e) => setResidents(parseInt(e.target.value) || 1)}
+                      className="w-full px-3 py-2 bg-black/40 border border-green-900/30 rounded-lg text-emerald-100 focus:border-emerald-400 focus:outline-none"
+                      placeholder="Enter number of residents (1-20)"
+                    />
+                    <p className="text-emerald-100/60 text-xs mt-1">Number of people living in this household</p>
+                  </div>
                 </div>
               </div>
 
@@ -317,9 +382,10 @@ const CleanerRegistrationCard = () => {
                 </h4>
                 <ul className="text-blue-200/80 text-sm lg:text-base space-y-2">
                   <li>• Connected wallet with valid address</li>
-                  <li>• Not registered as a house on the same address</li>
+                  <li>• Not registered as a cleaner on the same address</li>
+                  <li>• Valid neighborhood selection</li>
+                  <li>• Resident count between 1-20</li>
                   <li>• Contract must not be paused</li>
-                  <li>• Commitment to follow collection protocols</li>
                 </ul>
               </div>
 
@@ -327,7 +393,15 @@ const CleanerRegistrationCard = () => {
               <div className="text-center">
                 <button
                   onClick={handleRegister}
-                  disabled={isRegistering || isPaused || isRegisteredHouse || !address}
+                  disabled={
+                    isRegistering || 
+                    isPaused || 
+                    isRegisteredCleaner || 
+                    !address || 
+                    !selectedNeighborhood || 
+                    residents < 1 || 
+                    residents > 20
+                  }
                   className="w-full max-w-md mx-auto px-8 py-4 lg:py-5 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-500 hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-3 text-base lg:text-lg"
                 >
                   {isRegistering ? (
@@ -337,15 +411,15 @@ const CleanerRegistrationCard = () => {
                     </>
                   ) : (
                     <>
-                      <UserGroupIcon className="w-6 h-6" />
-                      Register as Cleaner
+                      <HomeIcon className="w-6 h-6" />
+                      Register Household
                     </>
                   )}
                 </button>
                 
-                {address && !isPaused && !isRegisteredHouse && (
+                {address && !isPaused && !isRegisteredCleaner && selectedNeighborhood && residents >= 1 && residents <= 20 && (
                   <p className="text-emerald-100/60 text-sm mt-3">
-                    By registering, you agree to follow GreenGrid collection protocols and maintain honest reporting.
+                    By registering, you agree to participate honestly in the GreenGrid collection verification system.
                   </p>
                 )}
               </div>
@@ -358,7 +432,7 @@ const CleanerRegistrationCard = () => {
 };
 
 // Main Page Component
-export default function CleanerRegistrationPage() {
+export default function HouseholdRegistrationPage() {
   const { isConnected } = useAccount();
 
   return (
@@ -378,18 +452,18 @@ export default function CleanerRegistrationPage() {
         {!isConnected ? (
           <div className="text-center py-16 max-w-md mx-auto">
             <div className="bg-white/5 border border-green-900/30 rounded-xl lg:rounded-2xl p-8 lg:p-12 backdrop-blur-md">
-              <UserGroupIcon className="w-16 h-16 lg:w-20 lg:h-20 text-emerald-400 mx-auto mb-6" />
+              <HomeIcon className="w-16 h-16 lg:w-20 lg:h-20 text-emerald-400 mx-auto mb-6" />
               <h2 className="text-2xl lg:text-3xl font-bold text-emerald-100 mb-4">
                 Connect Your Wallet
               </h2>
               <p className="text-emerald-100/70 mb-6 text-base lg:text-lg">
-                Please connect your wallet to register as a cleaner.
+                Please connect your wallet to register your household.
               </p>
               <ConnectButton />
             </div>
           </div>
         ) : (
-          <CleanerRegistrationCard />
+          <HouseholdRegistrationCard />
         )}
       </main>
     </div>

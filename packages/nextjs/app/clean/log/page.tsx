@@ -34,14 +34,14 @@ const Navigation = () => {
       </div>
 
       <div className="hidden lg:flex items-center gap-6 xl:gap-8 2xl:gap-12">
-        <a href="/house" className="text-emerald-100/80 hover:text-emerald-200 text-base 2xl:text-lg font-medium transition-colors">
+        <a href="/households/register" className="text-emerald-100/80 hover:text-emerald-200 text-base 2xl:text-lg font-medium transition-colors">
           Household
         </a>
-        <a href="/clean" className="text-emerald-200 text-base 2xl:text-lg font-medium">
+        <a href="/clean/register" className="text-emerald-200 text-base 2xl:text-lg font-medium">
           Cleaner
         </a>
-        <a href="/validate" className="text-emerald-100/80 hover:text-emerald-200 text-base 2xl:text-lg font-medium transition-colors">
-          Validator
+        <a href="/neighborhoods/register" className="text-emerald-100/80 hover:text-emerald-200 text-base 2xl:text-lg font-medium transition-colors">
+          Neighborhood
         </a>
       </div>
 

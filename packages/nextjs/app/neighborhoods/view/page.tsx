@@ -35,14 +35,11 @@ const Navigation = () => {
         <a href="/households/register" className="text-emerald-100/80 hover:text-emerald-200 text-base 2xl:text-lg font-medium transition-colors">
           Household
         </a>
-        <a href="/clean/log" className="text-emerald-100/80 hover:text-emerald-200 text-base 2xl:text-lg font-medium transition-colors">
+        <a href="/clean/register" className="text-emerald-200 text-base 2xl:text-lg font-medium">
           Cleaner
         </a>
-        <a href="/neighborhoods/register" className="text-emerald-200 text-base 2xl:text-lg font-medium">
-          Neighborhoods
-        </a>
-        <a href="/validate" className="text-emerald-100/80 hover:text-emerald-200 text-base 2xl:text-lg font-medium transition-colors">
-          Validator
+        <a href="/neighborhoods/register" className="text-emerald-100/80 hover:text-emerald-200 text-base 2xl:text-lg font-medium transition-colors">
+          Neighborhood
         </a>
       </div>
 

@@ -3,6 +3,22 @@ description:
 globs: 
 alwaysApply: true
 ---
+## PRD Compliance Requirements
+**ALWAYS** reference the Product Requirements Document (PRD.md) before implementing any new features or functionality. The PRD defines:
+- Project scope and objectives (CleanChain - Decentralized Garbage Collection Verification Platform)
+- Target user personas (Households, Garbage Collectors, Community Validators)
+- Key features and data structures
+- Technology stack requirements (Monad blockchain, Hardhat, React/Next.js)
+
+Before adding any feature:
+1. Check if it aligns with the PRD's defined objectives
+2. Ensure it serves one of the target user personas
+3. Verify it fits within the defined data structures and smart contract modules
+4. Confirm it follows the technology stack specified in the PRD
+
+If a feature request doesn't align with the PRD, discuss updating the PRD first before implementation.
+
+---
 
 This codebase contains Scaffold-ETH 2 (SE-2), everything you need to build dApps on Ethereum. Its tech stack is NextJS, RainbowKit, Wagmi and Typescript. Supports Hardhat and Foundry.
 

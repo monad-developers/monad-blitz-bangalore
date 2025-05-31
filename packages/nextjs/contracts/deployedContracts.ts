@@ -4,6 +4,1775 @@
  */
 import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
-const deployedContracts = {} as const;
+const deployedContracts = {
+  31337: {
+    CleanChain: {
+      address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_owner",
+              type: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "cleaner",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "neighborhoodName",
+              type: "string",
+            },
+          ],
+          name: "CleanerAssignedToNeighborhood",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "wallet",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "timestamp",
+              type: "uint256",
+            },
+          ],
+          name: "CleanerRegistered",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "cleaner",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "neighborhoodName",
+              type: "string",
+            },
+          ],
+          name: "CleanerRemovedFromNeighborhood",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "eventId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "house",
+              type: "address",
+            },
+          ],
+          name: "CollectionEventConfirmed",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "eventId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "cleaner",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "house",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "bytes32",
+              name: "imageHash",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "timestamp",
+              type: "uint256",
+            },
+          ],
+          name: "CollectionEventCreated",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "complaintId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "reporter",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "location",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "neighborhood",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "bytes32",
+              name: "imageHash",
+              type: "bytes32",
+            },
+          ],
+          name: "ComplaintCreated",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "bool",
+              name: "paused",
+              type: "bool",
+            },
+          ],
+          name: "ContractPaused",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "wallet",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "neighborhood",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "uint8",
+              name: "residents",
+              type: "uint8",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "timestamp",
+              type: "uint256",
+            },
+          ],
+          name: "HouseRegistered",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "string",
+              name: "neighborhoodName",
+              type: "string",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "admin",
+              type: "address",
+            },
+          ],
+          name: "NeighborhoodAdminAssigned",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "string",
+              name: "neighborhoodName",
+              type: "string",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "admin",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "timestamp",
+              type: "uint256",
+            },
+          ],
+          name: "NeighborhoodRegistered",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "string",
+              name: "neighborhoodName",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "bool",
+              name: "isActive",
+              type: "bool",
+            },
+          ],
+          name: "NeighborhoodStatusChanged",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "recipient",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "points",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "reason",
+              type: "string",
+            },
+          ],
+          name: "PointsAwarded",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_cleaner",
+              type: "address",
+            },
+            {
+              internalType: "string",
+              name: "_neighborhood",
+              type: "string",
+            },
+          ],
+          name: "assignCleanerToNeighborhood",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_neighborhood",
+              type: "string",
+            },
+            {
+              internalType: "address",
+              name: "_newAdmin",
+              type: "address",
+            },
+          ],
+          name: "assignNeighborhoodAdmin",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address[]",
+              name: "_cleaners",
+              type: "address[]",
+            },
+            {
+              internalType: "string",
+              name: "_neighborhood",
+              type: "string",
+            },
+          ],
+          name: "batchAssignCleanersToNeighborhood",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address[]",
+              name: "_cleaners",
+              type: "address[]",
+            },
+            {
+              internalType: "string",
+              name: "_neighborhood",
+              type: "string",
+            },
+          ],
+          name: "batchRemoveCleanersFromNeighborhood",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "cleanerNeighborhoodAccess",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "cleaners",
+          outputs: [
+            {
+              internalType: "address",
+              name: "wallet",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "points",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "reputation",
+              type: "uint256",
+            },
+            {
+              internalType: "bool",
+              name: "isRegistered",
+              type: "bool",
+            },
+            {
+              internalType: "uint256",
+              name: "registrationTimestamp",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "collectionEvents",
+          outputs: [
+            {
+              internalType: "address",
+              name: "cleaner",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "house",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "timestamp",
+              type: "uint256",
+            },
+            {
+              internalType: "bytes32",
+              name: "imageHash",
+              type: "bytes32",
+            },
+            {
+              internalType: "string",
+              name: "imageURI",
+              type: "string",
+            },
+            {
+              internalType: "bool",
+              name: "confirmedByHouse",
+              type: "bool",
+            },
+            {
+              internalType: "uint256",
+              name: "eventId",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "complaints",
+          outputs: [
+            {
+              internalType: "address",
+              name: "reporter",
+              type: "address",
+            },
+            {
+              internalType: "bytes32",
+              name: "imageHash",
+              type: "bytes32",
+            },
+            {
+              internalType: "string",
+              name: "imageURI",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "location",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "neighborhood",
+              type: "string",
+            },
+            {
+              internalType: "uint8",
+              name: "status",
+              type: "uint8",
+            },
+            {
+              internalType: "uint256",
+              name: "timestamp",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "complaintId",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_eventId",
+              type: "uint256",
+            },
+            {
+              internalType: "bytes32",
+              name: "_imageHash",
+              type: "bytes32",
+            },
+            {
+              internalType: "string",
+              name: "_imageURI",
+              type: "string",
+            },
+          ],
+          name: "confirmGarbageCollection",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "contractPaused",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getAllNeighborhoods",
+          outputs: [
+            {
+              internalType: "string[]",
+              name: "",
+              type: "string[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getAllRegisteredCleaners",
+          outputs: [
+            {
+              internalType: "address[]",
+              name: "",
+              type: "address[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getAllRegisteredHouses",
+          outputs: [
+            {
+              internalType: "address[]",
+              name: "",
+              type: "address[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_cleanerAddress",
+              type: "address",
+            },
+          ],
+          name: "getCleaner",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "wallet",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "points",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "reputation",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bytes32[]",
+                  name: "collectionHashes",
+                  type: "bytes32[]",
+                },
+                {
+                  internalType: "bool",
+                  name: "isRegistered",
+                  type: "bool",
+                },
+                {
+                  internalType: "uint256",
+                  name: "registrationTimestamp",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string[]",
+                  name: "assignedNeighborhoods",
+                  type: "string[]",
+                },
+              ],
+              internalType: "struct CleanChain.Cleaner",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_cleanerAddress",
+              type: "address",
+            },
+          ],
+          name: "getCleanerCollectionEvents",
+          outputs: [
+            {
+              internalType: "uint256[]",
+              name: "",
+              type: "uint256[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_cleanerAddress",
+              type: "address",
+            },
+          ],
+          name: "getCleanerCollectionStats",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "totalEvents",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "confirmedEvents",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "confirmationRate",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_cleanerAddress",
+              type: "address",
+            },
+          ],
+          name: "getCleanerNeighborhoods",
+          outputs: [
+            {
+              internalType: "string[]",
+              name: "",
+              type: "string[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_neighborhood",
+              type: "string",
+            },
+          ],
+          name: "getCleanersInNeighborhood",
+          outputs: [
+            {
+              internalType: "address[]",
+              name: "",
+              type: "address[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_eventId",
+              type: "uint256",
+            },
+          ],
+          name: "getCollectionEvent",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "cleaner",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "house",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "timestamp",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "imageHash",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "string",
+                  name: "imageURI",
+                  type: "string",
+                },
+                {
+                  internalType: "bool",
+                  name: "confirmedByHouse",
+                  type: "bool",
+                },
+                {
+                  internalType: "uint256",
+                  name: "eventId",
+                  type: "uint256",
+                },
+              ],
+              internalType: "struct CleanChain.CollectionEvent",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_houseAddress",
+              type: "address",
+            },
+          ],
+          name: "getHouse",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "wallet",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "points",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "neighborhood",
+                  type: "string",
+                },
+                {
+                  internalType: "uint8",
+                  name: "residents",
+                  type: "uint8",
+                },
+                {
+                  internalType: "bytes32[]",
+                  name: "collectionHashes",
+                  type: "bytes32[]",
+                },
+                {
+                  internalType: "bool",
+                  name: "isRegistered",
+                  type: "bool",
+                },
+                {
+                  internalType: "uint256",
+                  name: "registrationTimestamp",
+                  type: "uint256",
+                },
+              ],
+              internalType: "struct CleanChain.House",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_houseAddress",
+              type: "address",
+            },
+          ],
+          name: "getHouseCollectionEvents",
+          outputs: [
+            {
+              internalType: "uint256[]",
+              name: "",
+              type: "uint256[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_houseAddress",
+              type: "address",
+            },
+          ],
+          name: "getHouseCollectionStats",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "totalEvents",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "confirmedEvents",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "pendingEvents",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_neighborhood",
+              type: "string",
+            },
+          ],
+          name: "getHousesInNeighborhood",
+          outputs: [
+            {
+              internalType: "address[]",
+              name: "",
+              type: "address[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_neighborhood",
+              type: "string",
+            },
+          ],
+          name: "getNeighborhood",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "description",
+                  type: "string",
+                },
+                {
+                  internalType: "address",
+                  name: "admin",
+                  type: "address",
+                },
+                {
+                  internalType: "bool",
+                  name: "isActive",
+                  type: "bool",
+                },
+                {
+                  internalType: "uint256",
+                  name: "registrationTimestamp",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "totalHouses",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "totalCleaners",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "totalCollections",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "confirmedCollections",
+                  type: "uint256",
+                },
+              ],
+              internalType: "struct CleanChain.Neighborhood",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_neighborhood",
+              type: "string",
+            },
+          ],
+          name: "getNeighborhoodStats",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "totalHouses",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "totalCleaners",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "totalCollections",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "confirmedCollections",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "confirmationRate",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getTotalCleaners",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getTotalHouses",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getTotalNeighborhoods",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "houses",
+          outputs: [
+            {
+              internalType: "address",
+              name: "wallet",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "points",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "neighborhood",
+              type: "string",
+            },
+            {
+              internalType: "uint8",
+              name: "residents",
+              type: "uint8",
+            },
+            {
+              internalType: "bool",
+              name: "isRegistered",
+              type: "bool",
+            },
+            {
+              internalType: "uint256",
+              name: "registrationTimestamp",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_cleaner",
+              type: "address",
+            },
+            {
+              internalType: "string",
+              name: "_neighborhood",
+              type: "string",
+            },
+          ],
+          name: "isCleanerAuthorized",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_address",
+              type: "address",
+            },
+          ],
+          name: "isNeighborhoodAdmin",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "isPaused",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_address",
+              type: "address",
+            },
+          ],
+          name: "isRegisteredCleaner",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_address",
+              type: "address",
+            },
+          ],
+          name: "isRegisteredHouse",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_houseAddress",
+              type: "address",
+            },
+            {
+              internalType: "bytes32",
+              name: "_imageHash",
+              type: "bytes32",
+            },
+            {
+              internalType: "string",
+              name: "_imageURI",
+              type: "string",
+            },
+          ],
+          name: "logGarbageCollection",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "neighborhoodAdmins",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "neighborhoodCleaners",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "neighborhoodHouses",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          name: "neighborhoods",
+          outputs: [
+            {
+              internalType: "string",
+              name: "name",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "description",
+              type: "string",
+            },
+            {
+              internalType: "address",
+              name: "admin",
+              type: "address",
+            },
+            {
+              internalType: "bool",
+              name: "isActive",
+              type: "bool",
+            },
+            {
+              internalType: "uint256",
+              name: "registrationTimestamp",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "totalHouses",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "totalCleaners",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "totalCollections",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "confirmedCollections",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "owner",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bool",
+              name: "_paused",
+              type: "bool",
+            },
+          ],
+          name: "pauseContract",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "registerCleaner",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_neighborhood",
+              type: "string",
+            },
+            {
+              internalType: "uint8",
+              name: "_residents",
+              type: "uint8",
+            },
+          ],
+          name: "registerHouse",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_name",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_description",
+              type: "string",
+            },
+            {
+              internalType: "address",
+              name: "_admin",
+              type: "address",
+            },
+          ],
+          name: "registerNeighborhood",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "registeredCleaners",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "registeredHouses",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "registeredNeighborhoods",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_cleaner",
+              type: "address",
+            },
+            {
+              internalType: "string",
+              name: "_neighborhood",
+              type: "string",
+            },
+          ],
+          name: "removeCleanerFromNeighborhood",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_neighborhood",
+              type: "string",
+            },
+            {
+              internalType: "bool",
+              name: "_isActive",
+              type: "bool",
+            },
+          ],
+          name: "setNeighborhoodStatus",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "totalCleaners",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "totalCollectionEvents",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "totalComplaints",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "totalHouses",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_cleanerAddress",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "_reputation",
+              type: "uint256",
+            },
+          ],
+          name: "updateCleanerReputation",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_houseAddress",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "_points",
+              type: "uint256",
+            },
+          ],
+          name: "updateHousePoints",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          stateMutability: "payable",
+          type: "receive",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+    YourContract: {
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_owner",
+              type: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "greetingSetter",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "newGreeting",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "bool",
+              name: "premium",
+              type: "bool",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          name: "GreetingChange",
+          type: "event",
+        },
+        {
+          inputs: [],
+          name: "greeting",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "owner",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "premium",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_newGreeting",
+              type: "string",
+            },
+          ],
+          name: "setGreeting",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "totalCounter",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "userGreetingCounter",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "withdraw",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          stateMutability: "payable",
+          type: "receive",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+  },
+} as const;
 
 export default deployedContracts satisfies GenericContractsDeclaration;

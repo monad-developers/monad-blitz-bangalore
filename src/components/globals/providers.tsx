@@ -12,7 +12,8 @@ const config = createConfig(
     chains: [monadTestnet],
     transports: {
       // RPC URL for each chain
-      [mainnet.id]: http(process.env.MONAD_RPC),
+      [mainnet.id]: http(mainnet.rpcUrls.default.http[0]),
+      [monadTestnet.id]: http(monadTestnet.rpcUrls.default.http[0]),
     },
 
     // Required API Keys

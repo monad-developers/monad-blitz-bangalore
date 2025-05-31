@@ -54,10 +54,8 @@ export const ViewMessages = ({
                   <div key={result}>
                     {toolName === 'getmonadbalance' ? (
                       <BalanceCheck RecievedResult={result} />
-                    ) : toolName === 'transfersui' ? (
-                      <TransferMod
-                      // RecievedResult={result}
-                      />
+                    ) : toolName === 'sendmod' ? (
+                      <TransferMod RecievedResult={result} />
                     ) : (
                       <div>{JSON.stringify(result, null, 2)}</div>
                     )}

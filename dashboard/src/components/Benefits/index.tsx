@@ -56,26 +56,26 @@ const GridBackground = styled.div`
 const benefitsData = [
   {
     id: 1,
-    title: 'Local dev',
-    description: 'Integrate Virtual TestNets with Hardhat or Foundry to build with mainnet data locally. Extend your local setup with advanced development tools and facilitate collaboration over a shared infrastructure.',
+    title: 'Function Development',
+    description: 'Build serverless functions in JavaScript, Python, or Solidity-style with automatic WASM compilation. Deploy with a simple CLI command and integrate with your existing development workflow.',
     image: benefit1,
   },
   {
     id: 2,
-    title: 'CI/CD',
-    description: 'Scale your CI process with managed environments for fast, iterative testing. Speed up your build and release cycles without additional infrastructure management overhead.',
+    title: 'Automated Triggers',
+    description: 'Set up price alerts, on-chain event listeners, HTTP webhooks, and time-based triggers. Functions execute automatically when conditions are met, with parallel processing for high throughput.',
     image: benefit2,
   },
   {
     id: 3,
-    title: 'Dapp staging',
-    description: 'Spin up collaborative staging environments for your smart contract, frontend, and backend teams. Eliminate development silos and enable fast, iterative, and incremental dapp development.',
+    title: 'Gas Optimization',
+    description: 'Pay-as-you-go gas model with ERC-2771 forwarder contracts for sponsored transactions. Users can execute functions without holding ETH, while developers control gas costs efficiently.',
     image: benefit3,
   },
   {
     id: 4,
-    title: 'Public testing',
-    description: 'Gather real-time feedback and identify actual usage patterns through public dapp testing. Run your dapp on a long-running, publicly accessible Virtual TestNet so users can test your dapp with an unlimited faucet.',
+    title: 'Real-time Analytics',
+    description: 'Monitor function executions with live dashboards, WebSocket updates, and comprehensive metrics. Track performance, costs, success rates, and optimize your serverless architecture.',
     image: benefit4,
   },
 ];
@@ -86,9 +86,9 @@ const Benefits: React.FC = () => {
       <GridBackground />
       <BackgroundEffect />
       <Container>
-        <SectionHeader 
-          title="Virtual TestNets, development workflows" 
-          subtitle="Streamline your development process with purpose-built environments for every stage"
+        <SectionHeader
+          title="Serverless Functions, Blockchain Workflows"
+          subtitle="Transform your dApp development with on-chain serverless computing and automated execution"
         />
         <BenefitsGrid>
           {benefitsData.map((benefit) => (

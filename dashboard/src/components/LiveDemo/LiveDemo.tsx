@@ -5,61 +5,132 @@ import MetricsService from '../../services/MetricsService';
 import EtherscanService from '../../utils/etherscan';
 
 const DemoContainer = styled.div`
-  background: rgba(10, 10, 15, 0.95);
+  background: linear-gradient(135deg, rgba(20, 20, 40, 0.95) 0%, rgba(10, 10, 20, 0.98) 100%);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(138, 112, 255, 0.3);
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: 24px;
+  padding: 32px;
   margin: 20px 0;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle at center, rgba(138, 112, 255, 0.15) 0%, transparent 70%);
+    filter: blur(60px);
+    opacity: 0.6;
+    z-index: 0;
+    transform: translate(30%, -30%);
+  }
+`;
+
+const GlowEffect = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle at center, rgba(76, 205, 196, 0.15) 0%, transparent 70%);
+  filter: blur(50px);
+  opacity: 0.5;
+  z-index: 0;
+  transform: translate(-30%, 30%);
 `;
 
 const DemoHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(138, 112, 255, 0.3), transparent);
+  }
 `;
 
 const DemoTitle = styled.h3`
   color: #ffffff;
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 700;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  &::before {
+    content: '🚨';
+    font-size: 28px;
+    filter: drop-shadow(0 0 10px rgba(255, 107, 107, 0.8));
+  }
+  
+  span {
+    background: linear-gradient(135deg, #ffffff 20%, #8a70ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 `;
 
 const DemoStatus = styled.div<{ status: 'idle' | 'deploying' | 'deployed' | 'testing' | 'error' }>`
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border-radius: 20px;
+  gap: 10px;
+  padding: 10px 20px;
+  border-radius: 30px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  
   background: ${props => {
     switch (props.status) {
-      case 'idle': return 'rgba(136, 136, 136, 0.1)';
-      case 'deploying': return 'rgba(255, 217, 61, 0.1)';
-      case 'deployed': return 'rgba(76, 205, 196, 0.1)';
-      case 'testing': return 'rgba(138, 112, 255, 0.1)';
-      case 'error': return 'rgba(255, 107, 107, 0.1)';
+      case 'idle': return 'rgba(136, 136, 136, 0.15)';
+      case 'deploying': return 'rgba(255, 217, 61, 0.15)';
+      case 'deployed': return 'rgba(76, 205, 196, 0.15)';
+      case 'testing': return 'rgba(138, 112, 255, 0.15)';
+      case 'error': return 'rgba(255, 107, 107, 0.15)';
     }
   }};
+  
   color: ${props => {
     switch (props.status) {
-      case 'idle': return '#888';
+      case 'idle': return '#aaa';
       case 'deploying': return '#ffd93d';
       case 'deployed': return '#4ecdc4';
       case 'testing': return '#8a70ff';
       case 'error': return '#ff6b6b';
     }
   }};
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
 `;
 
 const StatusDot = styled.div<{ status: string }>`
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background-color: currentColor;
+  box-shadow: 0 0 10px currentColor;
   animation: ${props => props.status === 'deploying' || props.status === 'testing' ? 'pulse 1.5s infinite' : 'none'};
 
   @keyframes pulse {
@@ -71,107 +142,216 @@ const StatusDot = styled.div<{ status: string }>`
 const DemoSteps = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 24px;
+  gap: 24px;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
 `;
 
 const StepCard = styled.div<{ active?: boolean; completed?: boolean }>`
-  background: rgba(255, 255, 255, 0.05);
+  background: ${props => {
+    if (props.completed) return 'rgba(76, 205, 196, 0.07)';
+    if (props.active) return 'rgba(138, 112, 255, 0.07)';
+    return 'rgba(255, 255, 255, 0.03)';
+  }};
   border: 1px solid ${props => {
     if (props.completed) return 'rgba(76, 205, 196, 0.3)';
     if (props.active) return 'rgba(138, 112, 255, 0.3)';
     return 'rgba(255, 255, 255, 0.1)';
   }};
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 16px;
+  padding: 24px;
   transition: all 0.3s ease;
+  box-shadow: ${props => {
+    if (props.completed) return '0 8px 25px rgba(76, 205, 196, 0.1)';
+    if (props.active) return '0 8px 25px rgba(138, 112, 255, 0.1)';
+    return 'none';
+  }};
+  position: relative;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: ${props => {
+      if (props.completed) return '0 12px 30px rgba(76, 205, 196, 0.15)';
+      if (props.active) return '0 12px 30px rgba(138, 112, 255, 0.15)';
+      return '0 8px 20px rgba(0, 0, 0, 0.1)';
+    }};
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: ${props => {
+      if (props.completed) return 'radial-gradient(circle at center, rgba(76, 205, 196, 0.15) 0%, transparent 70%)';
+      if (props.active) return 'radial-gradient(circle at center, rgba(138, 112, 255, 0.15) 0%, transparent 70%)';
+      return 'none';
+    }};
+    filter: blur(20px);
+    opacity: 0.5;
+    transform: translate(30%, -30%);
+  }
 `;
 
 const StepNumber = styled.div<{ completed?: boolean; active?: boolean }>`
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: ${props => {
-    if (props.completed) return '#4ecdc4';
-    if (props.active) return '#8a70ff';
+    if (props.completed) return 'linear-gradient(135deg, #4ecdc4 0%, #2eaaa1 100%)';
+    if (props.active) return 'linear-gradient(135deg, #8a70ff 0%, #6b5ce7 100%)';
     return 'rgba(255, 255, 255, 0.1)';
   }};
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
-  margin-bottom: 12px;
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 16px;
+  box-shadow: ${props => {
+    if (props.completed) return '0 5px 15px rgba(76, 205, 196, 0.3)';
+    if (props.active) return '0 5px 15px rgba(138, 112, 255, 0.3)';
+    return 'none';
+  }};
+  transition: all 0.3s ease;
+  
+  ${StepCard}:hover & {
+    transform: scale(1.05);
+  }
 `;
 
 const StepTitle = styled.h4`
   color: #ffffff;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   margin: 0 0 8px 0;
 `;
 
 const StepDescription = styled.p`
-  color: #888;
+  color: rgba(255, 255, 255, 0.6);
   font-size: 14px;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.6;
 `;
 
 const ConfigSection = styled.div`
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 24px;
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #8a70ff, #4ecdc4);
+    border-radius: 3px 3px 0 0;
+  }
 `;
 
 const ConfigTitle = styled.h4`
   color: #8a70ff;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
-  margin: 0 0 16px 0;
+  margin: 0 0 20px 0;
+  position: relative;
+  display: inline-block;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: rgba(138, 112, 255, 0.5);
+    border-radius: 1px;
+  }
 `;
 
 const ConfigGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 20px;
 `;
 
 const ConfigItem = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 `;
 
 const ConfigLabel = styled.label`
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.8);
   font-size: 14px;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  
+  &::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: #8a70ff;
+    border-radius: 50%;
+  }
 `;
 
 const ConfigInput = styled.input`
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: #ffffff;
-  padding: 10px;
-  border-radius: 6px;
+  padding: 12px 16px;
+  border-radius: 10px;
   font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
 
   &:focus {
     outline: none;
     border-color: #8a70ff;
+    box-shadow: 0 0 0 3px rgba(138, 112, 255, 0.1), 
+                inset 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+  
+  &:hover:not(:disabled) {
+    border-color: rgba(138, 112, 255, 0.3);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 `;
 
 const ConfigSelect = styled.select`
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: #ffffff;
-  padding: 10px;
-  border-radius: 6px;
+  padding: 12px 16px;
+  border-radius: 10px;
   font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
 
   option {
     background: #1a1a2e;
@@ -181,69 +361,153 @@ const ConfigSelect = styled.select`
   &:focus {
     outline: none;
     border-color: #8a70ff;
+    box-shadow: 0 0 0 3px rgba(138, 112, 255, 0.1), 
+                inset 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+  
+  &:hover:not(:disabled) {
+    border-color: rgba(138, 112, 255, 0.3);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 `;
 
 const ActionButtons = styled.div`
   display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 16px;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
 `;
 
 const ActionButton = styled.button<{ variant?: 'primary' | 'secondary'; disabled?: boolean }>`
   background: ${props => {
     if (props.disabled) return 'rgba(136, 136, 136, 0.2)';
-    if (props.variant === 'secondary') return 'rgba(255, 255, 255, 0.1)';
+    if (props.variant === 'secondary') return 'rgba(255, 255, 255, 0.05)';
     return 'linear-gradient(135deg, #8a70ff 0%, #6b5ce7 100%)';
   }};
   border: 1px solid ${props => {
     if (props.disabled) return 'rgba(136, 136, 136, 0.3)';
-    if (props.variant === 'secondary') return 'rgba(255, 255, 255, 0.2)';
+    if (props.variant === 'secondary') return 'rgba(255, 255, 255, 0.1)';
     return 'transparent';
   }};
-  color: ${props => props.disabled ? '#666' : '#ffffff'};
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 14px;
+  color: ${props => props.disabled ? 'rgba(255, 255, 255, 0.4)' : '#ffffff'};
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 15px;
   font-weight: 600;
   cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  box-shadow: ${props => {
+    if (props.disabled) return 'none';
+    if (props.variant === 'secondary') return '0 5px 15px rgba(0, 0, 0, 0.1)';
+    return '0 8px 25px rgba(138, 112, 255, 0.3)';
+  }};
+  position: relative;
+  overflow: hidden;
 
   &:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(138, 112, 255, 0.3);
+    transform: translateY(-3px);
+    box-shadow: ${props => {
+      if (props.variant === 'secondary') return '0 8px 20px rgba(0, 0, 0, 0.15)';
+      return '0 12px 30px rgba(138, 112, 255, 0.4)';
+    }};
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(255, 255, 255, 0.1), transparent);
+    opacity: ${props => props.disabled ? 0 : 0.2};
   }
 `;
 
 const LogsSection = styled.div`
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 16px;
-  max-height: 200px;
+  border-radius: 16px;
+  padding: 20px;
+  max-height: 240px;
   overflow-y: auto;
+  position: relative;
+  z-index: 1;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(138, 112, 255, 0.3);
+    border-radius: 3px;
+    
+    &:hover {
+      background: rgba(138, 112, 255, 0.5);
+    }
+  }
 `;
 
 const LogEntry = styled.div<{ type: 'info' | 'success' | 'error' | 'warning' }>`
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 8px;
-  font-size: 12px;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
   font-family: 'Monaco', 'Menlo', monospace;
   color: ${props => {
     switch (props.type) {
       case 'success': return '#4ecdc4';
       case 'error': return '#ff6b6b';
       case 'warning': return '#ffd93d';
-      default: return '#888';
+      default: return 'rgba(255, 255, 255, 0.6)';
     }
   }};
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: ${props => {
+    switch (props.type) {
+      case 'success': return 'rgba(78, 205, 196, 0.1)';
+      case 'error': return 'rgba(255, 107, 107, 0.1)';
+      case 'warning': return 'rgba(255, 217, 61, 0.1)';
+      default: return 'rgba(255, 255, 255, 0.03)';
+    }
+  }};
+  border-left: 3px solid ${props => {
+    switch (props.type) {
+      case 'success': return '#4ecdc4';
+      case 'error': return '#ff6b6b';
+      case 'warning': return '#ffd93d';
+      default: return 'rgba(255, 255, 255, 0.2)';
+    }
+  }};
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: ${props => {
+      switch (props.type) {
+        case 'success': return 'rgba(78, 205, 196, 0.15)';
+        case 'error': return 'rgba(255, 107, 107, 0.15)';
+        case 'warning': return 'rgba(255, 217, 61, 0.15)';
+        default: return 'rgba(255, 255, 255, 0.05)';
+      }
+    }};
+  }
 `;
 
 const LogTime = styled.span`
-  color: #666;
-  min-width: 60px;
+  color: rgba(255, 255, 255, 0.4);
+  min-width: 65px;
 `;
 
 const LogMessage = styled.span`
@@ -253,9 +517,15 @@ const LogMessage = styled.span`
 const LogLink = styled.a`
   color: #8a70ff;
   text-decoration: none;
+  background: rgba(138, 112, 255, 0.1);
+  padding: 3px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
   
   &:hover {
-    text-decoration: underline;
+    background: rgba(138, 112, 255, 0.2);
+    text-decoration: none;
+    transform: translateY(-1px);
   }
 `;
 
@@ -401,8 +671,9 @@ export async function handler(ctx) {
 
   return (
     <DemoContainer>
+      <GlowEffect />
       <DemoHeader>
-        <DemoTitle>🚨 Live Price Alert Demo</DemoTitle>
+        <DemoTitle><span>Live Price Alert Demo</span></DemoTitle>
         <DemoStatus status={status}>
           <StatusDot status={status} />
           {status === 'idle' && 'Ready to Deploy'}

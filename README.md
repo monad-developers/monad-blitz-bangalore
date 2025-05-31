@@ -1,6 +1,6 @@
-# MonadFaas - Serverless Functions on Monad
+# 🚀 Monad FaaS - Serverless Functions on Monad Blockchain
 
-A decentralized serverless platform built for the Monad blockchain ecosystem. Deploy, manage, and execute serverless functions with event-driven triggers using real MON tokens.
+**Monad FaaS** lets any dApp developer deploy small serverless "functions" (WebAssembly, JS, Python, or Solidity-style) that automatically run in parallel in response to on-chain or HTTP/webhook triggers—just like AWS Lambda, but on-chain, with pay-as-you-go gas abstraction.
 
 ## 🚀 **Successfully Deployed on Monad Testnet!**
 
@@ -8,15 +8,35 @@ A decentralized serverless platform built for the Monad blockchain ecosystem. De
 **Network**: Monad Testnet (Chain ID: 10143)  
 **Status**: ✅ Live and Operational
 
-## ✨ Features
+## 🏗️ **Architecture Components**
 
-- 🔗 **Real Blockchain Integration** - Uses actual MON tokens for gas fees
-- ⚡ **Event-Driven Architecture** - Price triggers, webhooks, time-based events
-- 🎯 **Serverless Functions** - Deploy JavaScript/WASM functions on-chain
-- 📊 **Web Dashboard** - Modern React interface for function management
-- 🛠️ **CLI Tools** - Command-line interface for developers
-- 🔄 **Parallel Execution** - Multiple functions execute simultaneously
-- 💰 **Gas Optimized** - Efficient smart contract design
+### 📋 **1. On-Chain Registry**
+- **Smart Contract**: Stores function metadata, WASM hashes, and trigger definitions
+- **Event System**: Fires events on registration, updates, and trigger matches
+- **Access Control**: Secure function management and execution permissions
+
+### 🛠️ **2. CLI/SDK**
+- **TypeScript-based CLI**: `monad-faas` command-line tool
+- **Project Scaffolding**: Initialize JS, Python, or Solidity-style functions
+- **WASM Bundling**: Automatic compilation and IPFS upload
+- **Trigger Registration**: Deploy functions with Ethers.js integration
+
+### ⚙️ **3. Orchestrator Service**
+- **Event Subscription**: Monitors on-chain events via Envio/JSON-RPC
+- **WASM Runtime**: Containerized execution with WASI + EVM-shim
+- **Parallel Processing**: Execute 100+ functions simultaneously in one block
+- **Result Callbacks**: Post execution results back on-chain
+
+### 💰 **4. Gas Relay / ERC-2771**
+- **Forwarder Contract**: Sponsored transactions for seamless UX
+- **Meta-transactions**: Users execute functions without holding ETH
+- **SDK Utilities**: Easy integration for sponsored gas payments
+
+### 📊 **5. Dashboard (React + Next.js)**
+- **Live Monitoring**: Real-time logs and metrics of all function invocations
+- **Function Management**: Deploy, configure, and monitor serverless functions
+- **Gas Sponsoring**: Button to sponsor gas per-function or per-user
+- **Stress Testing**: Launch and visualize 100 parallel invocations
 
 ## 📁 Project Structure
 
@@ -53,10 +73,8 @@ A decentralized serverless platform built for the Monad blockchain ecosystem. De
 git clone <repo-url>
 cd monad-blitz-bangalore
 
-# Install dependencies
+# Install dependencies (automatically installs dashboard dependencies)
 npm install
-cd dashboard && npm install
-cd ../cli && npm install
 ```
 
 ### 2. Configure Environment
@@ -68,7 +86,30 @@ cp .env.example .env
 PRIVATE_KEY=0xYourPrivateKeyHere
 ```
 
-### 3. Run Demo
+### 3. Launch the Complete Platform
+```bash
+# 🚀 One-command launch (RECOMMENDED)
+npm run launch
+
+# This will:
+# - Start backend API server (port 3001)
+# - Start frontend dashboard (port 3000)
+# - Run integration tests
+# - Display demo instructions
+
+# Alternative: Manual startup
+npm run dev         # Start both services with concurrently
+npm run server      # Backend API only
+npm run dashboard   # Frontend only
+```
+
+### 4. Access the Platform
+- **Dashboard**: http://localhost:3000
+- **API Server**: http://localhost:3001
+- **Live Metrics**: http://localhost:3000 (click "📊 Live Metrics")
+- **Demo Showcase**: http://localhost:3000 (click "🚀 Demo")
+
+### 5. Run Performance Demos
 ```bash
 # Quick test (5 functions)
 npm run demo:small
@@ -76,8 +117,11 @@ npm run demo:small
 # Standard demo (20 functions)
 npm run demo
 
-# High performance demo (50 functions)
-npm run demo:large
+# High performance demo (100+ functions)
+npm run demo:enhanced
+
+# Stress test (200+ functions)
+npm run demo:stress
 ```
 
 ## 🎮 Optimized Demo Scripts

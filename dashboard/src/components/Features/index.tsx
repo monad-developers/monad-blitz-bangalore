@@ -363,65 +363,65 @@ const Features: React.FC = () => {
   
   const features: FeatureData[] = [
     {
-      id: 'virtual-testnets',
-      title: 'Virtual Testnets',
-      description: 'Replace rigid public testnets with customizable, zero-setup dev environments',
+      id: 'function-registry',
+      title: 'On-Chain Registry',
+      description: 'Smart contract registry storing function metadata, WASM hashes, and trigger definitions',
       icon: <TestnetIcon />,
       category: 'build',
       color: '#00d2c2'
     },
     {
-      id: 'smart-contract-dev',
-      title: 'Smart Contract Development',
-      description: 'Build and test smart contracts with a full development environment',
+      id: 'wasm-runtime',
+      title: 'WebAssembly Runtime',
+      description: 'Containerized WASM execution with WASI + EVM-shim for blockchain interactions',
       icon: <DevelopmentIcon />,
       category: 'build',
       color: '#00d2c2'
     },
     {
-      id: 'framework-integration',
-      title: 'Framework Integration',
-      description: 'Move across EVM chains with your entire stack natively supported',
+      id: 'multi-language',
+      title: 'Multi-Language Support',
+      description: 'Deploy functions in JavaScript, Python, or Solidity-style with automatic WASM compilation',
       icon: <FrameworkIcon />,
       category: 'build',
       color: '#00d2c2'
     },
     {
-      id: 'testing-integration',
-      title: 'Testing & Integration',
-      description: 'Seamlessly integrate with your existing testing workflow',
+      id: 'trigger-system',
+      title: 'Trigger System',
+      description: 'On-chain events, price thresholds, HTTP webhooks, and time-based triggers',
       icon: <IntegrationIcon />,
       category: 'build',
       color: '#00d2c2'
     },
     {
-      id: 'node-rpc',
-      title: 'Node RPC',
-      description: 'Go beyond the node standard with a scalable and extensible Node RPC',
+      id: 'parallel-execution',
+      title: 'Parallel Execution',
+      description: 'Execute 100+ functions simultaneously in a single block with optimized orchestration',
       icon: <RPCIcon />,
       category: 'scale',
       color: '#8a70ff'
     },
     {
-      id: 'team-collaboration',
-      title: 'Team Collaboration',
-      description: 'Work together in real-time with your team on your blockchain projects',
+      id: 'gas-abstraction',
+      title: 'Gas Abstraction',
+      description: 'ERC-2771 forwarder contracts for sponsored transactions and seamless user experience',
       icon: <CollaborationIcon />,
       category: 'scale',
       color: '#8a70ff'
     },
     {
-      id: 'global-rpc',
-      title: 'Global RPC Traffic',
-      description: 'Advanced API & RPC services with global distribution for low latency',
+      id: 'real-time-monitoring',
+      title: 'Real-time Monitoring',
+      description: 'Live dashboard with WebSocket updates, metrics, and execution analytics',
       icon: <GlobalIcon />,
       category: 'scale',
       color: '#8a70ff'
     },
     {
-      id: 'chain-monitoring',
-      title: 'Chain Ops & Monitoring',
-      description: 'Access granular on-chain data with Web3-native dev tooling',
+      id: 'ipfs-storage',
+      title: 'IPFS Integration',
+      description: 'Decentralized storage for function code with automatic WASM bundling and deployment',
       icon: <MonitoringIcon />,
       category: 'scale',
       color: '#8a70ff'
@@ -477,9 +477,10 @@ const Features: React.FC = () => {
       <BackgroundPattern />
       <ContentContainer>
         <SectionHeader>
-          <Title>Web3 development stack. <span>Turbocharged.</span></Title>
+          <Title>Serverless Functions. <span>On-Chain.</span></Title>
           <Subtitle>
-            Accelerate your on-chain velocity by adopting the most advanced, full-stack development platform for Web3.
+            Deploy and execute WebAssembly, JavaScript, and Python functions with automatic parallel execution,
+            on-chain triggers, and pay-as-you-go gas abstraction on Monad blockchain.
           </Subtitle>
         </SectionHeader>
         

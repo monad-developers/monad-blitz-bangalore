@@ -7,11 +7,14 @@ import Statistics from './components/Statistics';
 import MetricsPanel from './components/MetricsPanel/MetricsPanel';
 import FunctionEditor from './components/FunctionEditor/FunctionEditor';
 import LiveDemo from './components/LiveDemo/LiveDemo';
+import RealTimeMetrics from './components/RealTimeMetrics/RealTimeMetrics';
+import PriceAlertDemo from './components/PriceAlertDemo/PriceAlertDemo';
 import GlobalStyles from './GlobalStyles';
 import styled from 'styled-components';
 import BackgroundImage from './components/Features/BackgroundImage';
 import DeploymentService from './services/DeploymentService';
 import MetricsService from './services/MetricsService';
+import { Toaster } from 'react-hot-toast';
 
 const AppContainer = styled.div`
   position: relative;
@@ -35,6 +38,7 @@ const BackgroundPattern = styled.div`
 
 function App() {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [currentView, setCurrentView] = useState<'home' | 'metrics' | 'demo'>('home');
 
   // Apply scroll-snap behavior to body when Explorer section is in view
   useEffect(() => {
@@ -70,6 +74,37 @@ function App() {
     }
   };
 
+  // Navigation components
+  const NavigationBar = styled.div`
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1rem;
+    background: rgba(10, 10, 15, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(138, 112, 255, 0.3);
+    border-radius: 50px;
+    padding: 0.5rem;
+    z-index: 1000;
+  `;
+
+  const NavButton = styled.button<{ active?: boolean }>`
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    background: ${props => props.active ? 'linear-gradient(135deg, #8a70ff 0%, #6b5ce7 100%)' : 'transparent'};
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: ${props => props.active ? 'linear-gradient(135deg, #8a70ff 0%, #6b5ce7 100%)' : 'rgba(138, 112, 255, 0.2)'};
+    }
+  `;
+
   // Add floating action button for function editor
   const FloatingActionButton = styled.button`
     position: fixed;
@@ -88,25 +123,79 @@ function App() {
     z-index: 1000;
 
     &:hover {
-      transform: translateY(-3px);
+      transform: translateY(-5px);
       box-shadow: 0 12px 35px rgba(138, 112, 255, 0.6);
     }
   `;
 
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'metrics':
+        return <RealTimeMetrics />;
+      case 'demo':
+        return (
+          <div>
+            <PriceAlertDemo />
+            <LiveDemo />
+          </div>
+        );
+      default:
+        return (
+          <>
+            <Hero />
+            <Features />
+            <Statistics />
+            <PriceAlertDemo />
+            <Benefits />
+            <Explorer />
+            <MetricsPanel chainId={10143} />
+          </>
+        );
+    }
+  };
+
   return (
     <AppContainer>
       <GlobalStyles />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: 'rgba(10, 10, 15, 0.95)',
+            color: '#fff',
+            border: '1px solid rgba(138, 112, 255, 0.3)',
+            borderRadius: '8px',
+          },
+        }}
+      />
+
       <BackgroundImage src="/features-bg.webp" overlayOpacity={0.9} />
       <BackgroundPattern />
-      <Hero />
-      <Features />
-      <Statistics />
-      <LiveDemo />
-      <Benefits />
-      <Explorer />
 
-      {/* Enhanced Features */}
-      <MetricsPanel chainId={10143} />
+      {/* Navigation */}
+      <NavigationBar>
+        <NavButton
+          active={currentView === 'home'}
+          onClick={() => setCurrentView('home')}
+        >
+          🏠 Home
+        </NavButton>
+        <NavButton
+          active={currentView === 'metrics'}
+          onClick={() => setCurrentView('metrics')}
+        >
+          📊 Live Metrics
+        </NavButton>
+        <NavButton
+          active={currentView === 'demo'}
+          onClick={() => setCurrentView('demo')}
+        >
+          🚀 Demo
+        </NavButton>
+      </NavigationBar>
+
+      {renderCurrentView()}
 
       <FunctionEditor
         isOpen={isEditorOpen}

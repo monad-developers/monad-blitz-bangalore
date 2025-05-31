@@ -47,7 +47,7 @@ const { numFunctions, enableMetrics, outputFile, stressTest } = parseArgs();
 // Enhanced Configuration for High Performance
 const CONFIG = {
   rpcUrl: 'https://testnet-rpc.monad.xyz',
-  registryAddress: '0x4142d9Ad70f87c359260e6dC41340af5823BC888',
+  registryAddress: '0xA0008C89d0773C6bA854E05D72dC15Aa5E4012c8',
   privateKey: process.env.PRIVATE_KEY,
   numFunctions: numFunctions,
   priceThreshold: ethers.parseEther('2000'),

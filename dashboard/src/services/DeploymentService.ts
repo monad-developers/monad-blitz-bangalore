@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import MetricsService from './MetricsService';
+import { CONTRACT_CONFIG } from '../contracts';
 
 export interface FunctionDeploymentData {
   name: string;
@@ -22,23 +23,11 @@ export interface DeploymentResult {
 
 // Smart Contract Configuration
 const CONFIG = {
-  rpcUrl: 'https://testnet-rpc.monad.xyz',
-  registryAddress: '0x4142d9Ad70f87c359260e6dC41340af5823BC888',
+  rpcUrl: CONTRACT_CONFIG.rpcUrl,
+  registryAddress: CONTRACT_CONFIG.address,
   privateKey: process.env.REACT_APP_PRIVATE_KEY || '0xb480778fb8d22695cd5bc45337fbb300e784bd237c8a6f21a852cc41b98a081b',
   gasPrice: ethers.parseUnits('50', 'gwei'),
 };
-
-// Contract ABI
-const FUNCTION_REGISTRY_ABI = [
-  'function registerFunction(string calldata name, string calldata description, bytes32 wasmHash, uint256 gasLimit, string calldata runtime) external returns (uint256 functionId)',
-  'function addTrigger(uint256 functionId, uint8 triggerType, bytes calldata triggerData) external returns (uint256 triggerId)',
-  'function fireTrigger(uint256 triggerId, bytes calldata contextData) external',
-  'function nextFunctionId() external view returns (uint256)',
-  'function nextTriggerId() external view returns (uint256)',
-  'event FunctionRegistered(uint256 indexed functionId, address indexed owner, string name, bytes32 wasmHash)',
-  'event TriggerAdded(uint256 indexed triggerId, uint256 indexed functionId, uint8 triggerType)',
-  'event TriggerFired(uint256 indexed triggerId, uint256 indexed functionId, bytes contextData)'
-];
 
 // Trigger Types (matching smart contract enum)
 const TriggerType = {
@@ -57,7 +46,7 @@ class DeploymentService {
   constructor() {
     this.provider = new ethers.JsonRpcProvider(CONFIG.rpcUrl);
     this.wallet = new ethers.Wallet(CONFIG.privateKey, this.provider);
-    this.registry = new ethers.Contract(CONFIG.registryAddress, FUNCTION_REGISTRY_ABI, this.wallet);
+    this.registry = new ethers.Contract(CONFIG.registryAddress, CONTRACT_CONFIG.abi, this.wallet);
   }
 
   // Deploy a complete function with trigger

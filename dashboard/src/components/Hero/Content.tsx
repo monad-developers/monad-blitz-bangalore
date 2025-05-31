@@ -113,24 +113,27 @@ const HeroContent: React.FC = () => {
   return (
     <Container>
       <Heading>
-        Full-Stack
+        Monad FaaS
       </Heading>
       <SubHeading>
-        Infrastructure for <ColoredText>Web3</ColoredText> Pros
+        Serverless Functions for <ColoredText>Monad</ColoredText> Blockchain
       </SubHeading>
       <Subheading>
-        Accelerate your on-chain velocity by adopting the most advanced, full-stack development platform for Web3.
+        Deploy small serverless functions (WebAssembly, JS, Python) that automatically run in parallel
+        in response to on-chain or HTTP/webhook triggers—just like AWS Lambda, but on-chain,
+        with pay-as-you-go gas abstraction.
       </Subheading>
-      
+
       <FeatureList>
-        <FeatureItem>Customizable Node RPC</FeatureItem>
-        <FeatureItem>Collaborative dev infrastructure</FeatureItem>
-        <FeatureItem>Industry-recognized exploration tools</FeatureItem>
+        <FeatureItem>WebAssembly & JavaScript Runtime</FeatureItem>
+        <FeatureItem>On-chain & HTTP/Webhook Triggers</FeatureItem>
+        <FeatureItem>Parallel Execution & Gas Optimization</FeatureItem>
+        <FeatureItem>Real-time Metrics & Monitoring</FeatureItem>
       </FeatureList>
-      
+
       <ButtonContainer>
-        <SignUpButton>Sign up</SignUpButton>
-        <ContactSalesButton>Contact sales</ContactSalesButton>
+        <SignUpButton>Deploy Functions</SignUpButton>
+        <ContactSalesButton>View Demo</ContactSalesButton>
       </ButtonContainer>
       
       <ClientLogos />

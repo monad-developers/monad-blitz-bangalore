@@ -302,36 +302,36 @@ const ScrollHint = styled.div`
 const timelineData = [
   {
     id: 1,
-    title: 'Error & Stack Trace',
-    description: 'Identify the exact location and cause of a bug with a detailed stack trace and human-readable error messages.',
+    title: 'Function Registry',
+    description: 'View all deployed serverless functions with metadata, WASM hashes, and trigger configurations stored on-chain.',
     image: explorerImage1,
-    hasError: true
+    hasError: false
   },
   {
     id: 2,
-    title: 'TX Details',
-    description: 'Explore transaction data with decoded parameters and real-time status updates.',
+    title: 'Execution Logs',
+    description: 'Monitor real-time function executions with detailed logs, success rates, and performance metrics.',
     image: explorerImage2,
     hasError: false
   },
   {
     id: 3,
-    title: 'Debugger',
-    description: 'Step through contract execution with an intuitive debugger that shows state changes and variable values.',
+    title: 'Trigger Monitor',
+    description: 'Track active triggers including price alerts, webhooks, and on-chain events with live status updates.',
     image: explorerImage3,
     hasError: false
   },
   {
     id: 4,
-    title: 'Simulator',
-    description: 'Test transactions in a sandboxed environment before deploying to mainnet.',
+    title: 'Gas Analytics',
+    description: 'Analyze gas consumption patterns, optimize costs, and monitor sponsored transaction efficiency.',
     image: explorerImage4,
     hasError: false
   },
   {
     id: 5,
-    title: 'Gas Profiler',
-    description: 'Optimize your contracts with detailed gas usage statistics and improvement suggestions.',
+    title: 'Performance Profiler',
+    description: 'Optimize function performance with parallel execution metrics, WASM runtime statistics, and throughput analysis.',
     image: explorerImage5,
     hasError: false
   }
@@ -452,9 +452,9 @@ const Explorer: React.FC = () => {
     <ExplorerSectionContainer ref={sectionRef}>
       <ContentContainer>
         <SectionHeader>
-          <Title>Developer <span>Explorer</span></Title>
+          <Title>Function <span>Explorer</span></Title>
           <Subtitle>
-            Explore while developing with the only multichain explorer that provides decoded, human-readable insights relevant to your dapp.
+            Monitor and debug your serverless functions with real-time execution logs, performance metrics, and blockchain transaction details.
           </Subtitle>
         </SectionHeader>
         

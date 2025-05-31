@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import Editor from '@monaco-editor/react';
+import toast from 'react-hot-toast';
 
 const EditorContainer = styled.div`
   position: fixed;
@@ -194,98 +195,170 @@ const StatusMessage = styled.div<{ type: 'success' | 'error' | 'info' }>`
   }};
 `;
 
+// API Configuration
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+
 const FUNCTION_TEMPLATES = {
   'price-alert': {
-    name: 'Price Alert',
-    code: `// Price Alert Function
+    name: 'Advanced Price Alert',
+    code: `// Advanced Multi-Token Price Alert Function
 export async function handler(ctx) {
   const { trigger, env } = ctx;
-  
-  // Get price data from trigger
-  const { token, currentPrice, threshold } = trigger.data;
-  
-  console.log(\`Price alert triggered: \${token} = $\${currentPrice}\`);
-  
-  if (currentPrice < threshold) {
-    // Send webhook notification
-    await ctx.sendWebhook(env.WEBHOOK_URL, {
-      message: \`🚨 Price Alert: \${token} dropped to $\${currentPrice}\`,
-      token,
-      currentPrice,
-      threshold,
-      timestamp: new Date().toISOString()
+
+  // Configuration for multiple tokens
+  const watchList = [
+    { token: "ARB/USDC", threshold: 0.75, severity: "HIGH" },
+    { token: "ETH/USDT", threshold: 2000, severity: "MEDIUM" },
+    { token: "BTC/USDT", threshold: 40000, severity: "LOW" }
+  ];
+
+  const alerts = [];
+
+  for (const config of watchList) {
+    // Simulate price fetch (in real implementation, use oracle)
+    const currentPrice = await ctx.fetchTokenPrice(config.token);
+
+    if (currentPrice < config.threshold) {
+      const changePercent = ((currentPrice - config.threshold) / config.threshold * 100).toFixed(2);
+
+      alerts.push({
+        token: config.token,
+        currentPrice,
+        threshold: config.threshold,
+        changePercent,
+        severity: config.severity,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
+  if (alerts.length > 0) {
+    // Send consolidated alert
+    await ctx.sendWebhook(env.WEBHOOK_URL || "https://webhook.site/demo", {
+      type: "PRICE_ALERT_BATCH",
+      alertCount: alerts.length,
+      alerts,
+      summary: \`\${alerts.length} price alerts triggered\`,
+      highSeverityCount: alerts.filter(a => a.severity === "HIGH").length
     });
-    
+
     return {
       success: true,
-      message: 'Alert sent successfully',
-      data: { token, currentPrice, threshold }
+      message: \`\${alerts.length} alerts triggered and sent\`,
+      alerts
     };
   }
-  
+
   return {
     success: true,
-    message: 'Price above threshold, no alert needed'
+    message: 'All prices above thresholds, monitoring continues'
   };
 }`
   },
   'event-handler': {
-    name: 'Event Handler',
-    code: `// On-Chain Event Handler
+    name: 'Blockchain Event Handler',
+    code: `// Serverless On-Chain Event Handler for Monad FaaS
 export async function handler(ctx) {
   const { trigger, env } = ctx;
-  
-  // Process blockchain event
+
+  // Process blockchain event from Monad network
   const { event, blockNumber, transactionHash } = trigger.data;
-  
-  console.log(\`Processing event: \${event.name} at block \${blockNumber}\`);
-  
-  // Your event processing logic here
-  const result = await processEvent(event);
-  
-  // Store result or trigger other actions
-  if (result.shouldNotify) {
+
+  console.log(\`Processing Monad event: \${event.name} at block \${blockNumber}\`);
+
+  // Parallel processing for high throughput
+  const results = await Promise.all([
+    processEvent(event),
+    updateMetrics(event, blockNumber),
+    checkTriggerConditions(event)
+  ]);
+
+  const [eventResult, metricsResult, triggerResult] = results;
+
+  // Send notifications if conditions are met
+  if (eventResult.shouldNotify || triggerResult.triggered) {
     await ctx.sendWebhook(env.WEBHOOK_URL, {
-      message: \`Event processed: \${event.name}\`,
+      type: 'BLOCKCHAIN_EVENT',
+      message: \`Monad event processed: \${event.name}\`,
       blockNumber,
       transactionHash,
-      result
+      gasUsed: ctx.getGasUsed(),
+      results: { eventResult, metricsResult, triggerResult },
+      processedAt: new Date().toISOString()
     });
   }
-  
+
   return {
     success: true,
     eventProcessed: event.name,
-    result
+    blockNumber,
+    parallelResults: results,
+    gasEfficient: true
   };
 }
 
 async function processEvent(event) {
-  // Implement your event processing logic
+  // WASM-optimized event processing
   return {
-    shouldNotify: true,
-    processedAt: Date.now()
+    shouldNotify: event.value > 1000000, // Notify for large transactions
+    processedAt: Date.now(),
+    eventType: event.name
+  };
+}
+
+async function updateMetrics(event, blockNumber) {
+  // Update real-time metrics
+  return {
+    metricsUpdated: true,
+    blockNumber,
+    eventCount: 1
+  };
+}
+
+async function checkTriggerConditions(event) {
+  // Check if event triggers other functions
+  return {
+    triggered: event.name === 'Transfer' && event.value > 500000,
+    condition: 'large_transfer'
   };
 }`
   },
   'custom': {
-    name: 'Custom Function',
-    code: `// Custom Serverless Function
+    name: 'Custom WASM Function',
+    code: `// Custom Serverless Function for Monad FaaS
 export async function handler(ctx) {
   const { trigger, env } = ctx;
-  
-  console.log('Function triggered:', trigger);
-  
-  // Your custom logic here
+
+  console.log('WASM function triggered on Monad blockchain:', trigger);
+
+  // Access blockchain data through EVM-shim
+  const blockNumber = await ctx.getBlockNumber();
+  const gasPrice = await ctx.getGasPrice();
+
+  // Your custom serverless logic here
   const result = {
-    message: 'Hello from MonadFaas!',
+    message: 'Hello from Monad FaaS serverless function!',
     timestamp: new Date().toISOString(),
-    triggerType: trigger.type
+    triggerType: trigger.type,
+    blockNumber,
+    gasPrice: gasPrice.toString(),
+    runtime: 'WebAssembly',
+    platform: 'Monad Blockchain'
   };
-  
+
+  // Optional: Send webhook notification
+  if (env.WEBHOOK_URL) {
+    await ctx.sendWebhook(env.WEBHOOK_URL, {
+      functionExecuted: true,
+      result,
+      gasUsed: ctx.getGasUsed()
+    });
+  }
+
   return {
     success: true,
-    data: result
+    data: result,
+    gasEfficient: true
   };
 }`
   }
@@ -319,42 +392,74 @@ const FunctionEditor: React.FC<FunctionEditorProps> = ({ isOpen, onClose, onDepl
   const handleDeploy = async () => {
     if (!functionName.trim() || !code.trim()) {
       setStatusMessage({ type: 'error', text: 'Please provide function name and code' });
+      toast.error('Please provide function name and code');
       return;
     }
 
     setIsDeploying(true);
-    setStatusMessage({ type: 'info', text: 'Deploying function...' });
+    setStatusMessage({ type: 'info', text: 'Deploying function to Monad blockchain...' });
+    toast.loading('Deploying function...', { id: 'deploy' });
 
     try {
+      // Validate trigger config JSON
+      let parsedTriggerConfig = {};
+      try {
+        parsedTriggerConfig = JSON.parse(triggerConfig || '{}');
+      } catch (error) {
+        throw new Error('Invalid trigger configuration JSON');
+      }
+
       const functionData = {
         name: functionName,
         description: description || `${functionName} - Deployed via MonadFaas Editor`,
         code,
         runtime: 'javascript',
         triggerType,
-        triggerConfig: JSON.parse(triggerConfig || '{}'),
+        triggerConfig: parsedTriggerConfig,
         webhookUrl,
         gasLimit: 500000
       };
 
-      await onDeploy(functionData);
-      
-      setStatusMessage({ 
-        type: 'success', 
-        text: 'Function deployed successfully! Check the metrics panel for execution details.' 
+      // Deploy via API
+      const response = await fetch(`${API_BASE_URL}/api/functions/deploy`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(functionData)
       });
-      
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.error || 'Deployment failed');
+      }
+
+      const { functionId, triggerId, txHash, gasUsed } = result.data;
+
+      setStatusMessage({
+        type: 'success',
+        text: `Function deployed successfully! Function ID: ${functionId}, Trigger ID: ${triggerId}. Transaction: ${txHash}`
+      });
+
+      toast.success(`Function deployed! ID: ${functionId}`, { id: 'deploy' });
+
+      // Also call the original onDeploy for backward compatibility
+      await onDeploy(functionData);
+
       // Auto-close after successful deployment
       setTimeout(() => {
         onClose();
-      }, 2000);
-      
+      }, 3000);
+
     } catch (error) {
       console.error('Deployment failed:', error);
-      setStatusMessage({ 
-        type: 'error', 
-        text: `Deployment failed: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setStatusMessage({
+        type: 'error',
+        text: `Deployment failed: ${errorMessage}`
       });
+      toast.error(`Deployment failed: ${errorMessage}`, { id: 'deploy' });
     } finally {
       setIsDeploying(false);
     }

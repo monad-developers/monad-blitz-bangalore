@@ -66,7 +66,7 @@ export const ViewMessages = ({
                   <div key={toolCallId} className="skeleton">
                     {toolName === 'getWeather' ? (
                       <BalanceCheck />
-                    ) : toolName === 'transfersui' ? (
+                    ) : toolName === 'sendmod' ? (
                       <TransferMod />
                     ) : null}
                   </div>

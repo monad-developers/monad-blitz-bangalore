@@ -26,7 +26,7 @@ export function TransferMod({ RecievedResult }: TransferModProps) {
   const [status, setStatus] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { unsignedTx, txDetails, message, error } = RecievedResult || {};
+  const { txDetails, message, error } = RecievedResult || {};
 
   const isOnMonadTestnet = chainId === monadTestnet.id;
 
@@ -101,7 +101,7 @@ export function TransferMod({ RecievedResult }: TransferModProps) {
 
       {!isOnMonadTestnet && (
         <div className="rounded-lg border border-yellow-600 bg-yellow-950 p-3 text-sm text-yellow-300">
-          \u26a0\ufe0f You're connected to the wrong network. Click the button
+          \u26a0\ufe0f You are connected to the wrong network. Click the button
           below to switch.
         </div>
       )}

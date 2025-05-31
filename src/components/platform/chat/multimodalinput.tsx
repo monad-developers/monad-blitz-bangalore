@@ -21,16 +21,16 @@ import { Textarea } from '../../ui/textarea';
 
 const suggestedActions = [
   {
-    title: 'SUI Blockchain',
-    label: 'What is SUI Blockchain?',
+    title: 'Monad',
+    label: 'What is Monad BlockChain?',
     action:
-      'Explain in detail what is SUI Blockchain and its unqiure prperties',
+      'Explain in detail what is Monad Blockchain and its unqiure prperties',
   },
   {
     title: 'Give Balance',
     label: 'give balance of public address',
     action:
-      'give balance of 0x6b9827f2dc7a4e597f992330232598b82764d531d8557b54af7a7d7aa677463a SUI public address',
+      'give balance of 0x6b9827f2dc7a4e597f992330232598b82764d531d8557b54af7a7d7aa677463a  public address',
   },
 ];
 

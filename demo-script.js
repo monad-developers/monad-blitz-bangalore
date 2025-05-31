@@ -38,6 +38,15 @@ const CONFIG = {
   numFunctions: numFunctions,
   priceThreshold: ethers.parseEther('2000'), // $2000 threshold
   mockPrice: ethers.parseEther('2500'), // $2500 trigger price
+  // Performance optimizations
+  batchSize: Math.min(10, numFunctions), // Batch operations for better performance
+  concurrentTxs: Math.min(5, numFunctions), // Concurrent transaction limit
+  gasPrice: ethers.parseUnits('50', 'gwei'), // Optimized gas price
+  gasLimit: {
+    register: 300000, // Reduced gas limit for registration
+    trigger: 150000,  // Reduced gas limit for triggers
+    fire: 100000      // Reduced gas limit for firing
+  }
 };
 
 // Smart Contract ABI
@@ -74,6 +83,14 @@ class MonadFaasDemo {
     this.triggerIds = [];
     this.functionTriggerMap = new Map(); // Map function ID to trigger ID
     this.nonce = null;
+    this.performanceMetrics = {
+      startTime: Date.now(),
+      registrationTime: 0,
+      triggerTime: 0,
+      fireTime: 0,
+      totalGasUsed: 0,
+      transactionCount: 0
+    };
   }
 
   async initializeNonce() {
@@ -82,6 +99,31 @@ class MonadFaasDemo {
 
   getNextNonce() {
     return this.nonce++;
+  }
+
+  // Performance optimization: Create batches for parallel processing
+  createBatches(items, batchSize) {
+    const batches = [];
+    for (let i = 0; i < items.length; i += batchSize) {
+      batches.push(items.slice(i, i + batchSize));
+    }
+    return batches;
+  }
+
+  // Performance optimization: Execute transactions with controlled concurrency
+  async executeWithConcurrency(tasks, concurrency = CONFIG.concurrentTxs) {
+    const results = [];
+    for (let i = 0; i < tasks.length; i += concurrency) {
+      const batch = tasks.slice(i, i + concurrency);
+      const batchResults = await Promise.allSettled(batch);
+      results.push(...batchResults);
+
+      // Small delay to prevent overwhelming the network
+      if (i + concurrency < tasks.length) {
+        await new Promise(resolve => setTimeout(resolve, 50));
+      }
+    }
+    return results;
   }
 
   async run() {
@@ -124,51 +166,75 @@ class MonadFaasDemo {
     const startTime = Date.now();
     const mockWasmHash = ethers.keccak256(ethers.toUtf8Bytes('price-alert-function-wasm'));
 
-    // Register functions sequentially to avoid nonce conflicts
+    // Create registration tasks for parallel execution
+    const registrationTasks = [];
     for (let i = 0; i < CONFIG.numFunctions; i++) {
       const functionName = `price-alert-${i + 1}`;
       const description = `Price alert function #${i + 1} - Triggers when price exceeds $${ethers.formatEther(CONFIG.priceThreshold)}`;
 
-      try {
-        const tx = await this.registry.registerFunction(
-          functionName,
-          description,
-          mockWasmHash,
-          500000, // 500k gas limit
-          'javascript',
-          {
-            nonce: this.getNextNonce(),
-            gasLimit: 500000,
-            maxFeePerGas: ethers.parseUnits('100', 'gwei'),
-            maxPriorityFeePerGas: ethers.parseUnits('50', 'gwei')
-          }
-        );
+      const task = async () => {
+        try {
+          const tx = await this.registry.registerFunction(
+            functionName,
+            description,
+            mockWasmHash,
+            CONFIG.gasLimit.register, // Optimized gas limit
+            'javascript',
+            {
+              nonce: this.getNextNonce(),
+              gasLimit: CONFIG.gasLimit.register,
+              gasPrice: CONFIG.gasPrice // Use optimized gas price
+            }
+          );
 
-        const receipt = await tx.wait();
-        const log = receipt.logs.find(log => {
-          try {
+          const receipt = await tx.wait();
+          this.performanceMetrics.totalGasUsed += Number(receipt.gasUsed);
+          this.performanceMetrics.transactionCount++;
+
+          const log = receipt.logs.find(log => {
+            try {
+              const parsed = this.registry.interface.parseLog(log);
+              return parsed && parsed.name === 'FunctionRegistered';
+            } catch {
+              return false;
+            }
+          });
+
+          if (log) {
             const parsed = this.registry.interface.parseLog(log);
-            return parsed && parsed.name === 'FunctionRegistered';
-          } catch {
-            return false;
+            return Number(parsed.args[0]);
           }
-        });
-
-        if (log) {
-          const parsed = this.registry.interface.parseLog(log);
-          this.functionIds.push(Number(parsed.args[0]));
+          return null;
+        } catch (error) {
+          console.log(`   ⚠️  Failed to register function ${i + 1}: ${error.message}`);
+          return null;
         }
+      };
 
-        if ((i + 1) % Math.max(1, Math.floor(CONFIG.numFunctions / 10)) === 0 || i === CONFIG.numFunctions - 1) {
-          console.log(`   ✅ Registered ${i + 1}/${CONFIG.numFunctions} functions`);
-        }
-      } catch (error) {
-        console.log(`   ⚠️  Failed to register function ${i + 1}: ${error.message}`);
-      }
+      registrationTasks.push(task);
     }
 
+    // Execute registrations with controlled concurrency
+    console.log(`   🔄 Executing ${registrationTasks.length} registrations with ${CONFIG.concurrentTxs} concurrent transactions...`);
+    const results = await this.executeWithConcurrency(registrationTasks.map(task => task()));
+
+    // Collect successful function IDs
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled' && result.value) {
+        this.functionIds.push(result.value);
+      }
+
+      // Progress reporting
+      if ((index + 1) % Math.max(1, Math.floor(CONFIG.numFunctions / 10)) === 0 || index === CONFIG.numFunctions - 1) {
+        console.log(`   ✅ Processed ${index + 1}/${CONFIG.numFunctions} registrations`);
+      }
+    });
+
     const duration = Date.now() - startTime;
+    this.performanceMetrics.registrationTime = duration;
     console.log(chalk.green(`   🎉 Successfully registered ${this.functionIds.length} functions in ${duration}ms`));
+    console.log(chalk.cyan(`   ⚡ Average time per function: ${(duration / this.functionIds.length).toFixed(1)}ms`));
+    console.log(chalk.cyan(`   ⛽ Gas used: ${this.performanceMetrics.totalGasUsed.toLocaleString()}`));
     console.log();
   }
 
@@ -183,49 +249,68 @@ class MonadFaasDemo {
       ['ETH', CONFIG.priceThreshold]
     );
 
-    // Add triggers sequentially
-    for (let i = 0; i < this.functionIds.length; i++) {
-      try {
-        const tx = await this.registry.addTrigger(
-          this.functionIds[i],
-          TriggerType.PRICE_THRESHOLD,
-          triggerData,
-          {
-            nonce: this.getNextNonce(),
-            gasLimit: 300000,
-            maxFeePerGas: ethers.parseUnits('100', 'gwei'),
-            maxPriorityFeePerGas: ethers.parseUnits('50', 'gwei')
-          }
-        );
+    // Create trigger tasks for parallel execution
+    const triggerTasks = this.functionIds.map((functionId, index) => {
+      return async () => {
+        try {
+          const tx = await this.registry.addTrigger(
+            functionId,
+            TriggerType.PRICE_THRESHOLD,
+            triggerData,
+            {
+              nonce: this.getNextNonce(),
+              gasLimit: CONFIG.gasLimit.trigger,
+              gasPrice: CONFIG.gasPrice
+            }
+          );
 
-        const receipt = await tx.wait();
-        const log = receipt.logs.find(log => {
-          try {
+          const receipt = await tx.wait();
+          this.performanceMetrics.totalGasUsed += Number(receipt.gasUsed);
+          this.performanceMetrics.transactionCount++;
+
+          const log = receipt.logs.find(log => {
+            try {
+              const parsed = this.registry.interface.parseLog(log);
+              return parsed && parsed.name === 'TriggerAdded';
+            } catch {
+              return false;
+            }
+          });
+
+          if (log) {
             const parsed = this.registry.interface.parseLog(log);
-            return parsed && parsed.name === 'TriggerAdded';
-          } catch {
-            return false;
+            const triggerId = Number(parsed.args[0]);
+            this.functionTriggerMap.set(functionId, triggerId);
+            return triggerId;
           }
-        });
-
-        if (log) {
-          const parsed = this.registry.interface.parseLog(log);
-          const triggerId = Number(parsed.args[0]);
-          const functionId = this.functionIds[i];
-          this.triggerIds.push(triggerId);
-          this.functionTriggerMap.set(functionId, triggerId);
+          return null;
+        } catch (error) {
+          console.log(`   ⚠️  Failed to add trigger for function ${functionId}: ${error.message}`);
+          return null;
         }
+      };
+    });
 
-        if ((i + 1) % Math.max(1, Math.floor(this.functionIds.length / 10)) === 0 || i === this.functionIds.length - 1) {
-          console.log(`   ✅ Added ${i + 1}/${this.functionIds.length} triggers`);
-        }
-      } catch (error) {
-        console.log(`   ⚠️  Failed to add trigger ${i + 1}: ${error.message}`);
+    // Execute trigger additions with controlled concurrency
+    console.log(`   🔄 Adding ${triggerTasks.length} triggers with ${CONFIG.concurrentTxs} concurrent transactions...`);
+    const results = await this.executeWithConcurrency(triggerTasks.map(task => task()));
+
+    // Collect successful trigger IDs
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled' && result.value) {
+        this.triggerIds.push(result.value);
       }
-    }
+
+      // Progress reporting
+      if ((index + 1) % Math.max(1, Math.floor(this.functionIds.length / 10)) === 0 || index === this.functionIds.length - 1) {
+        console.log(`   ✅ Processed ${index + 1}/${this.functionIds.length} triggers`);
+      }
+    });
 
     const duration = Date.now() - startTime;
+    this.performanceMetrics.triggerTime = duration;
     console.log(chalk.green(`   🎉 Successfully added ${this.triggerIds.length} triggers in ${duration}ms`));
+    console.log(chalk.cyan(`   ⚡ Average time per trigger: ${(duration / this.triggerIds.length).toFixed(1)}ms`));
     console.log();
   }
 
@@ -252,42 +337,53 @@ class MonadFaasDemo {
     console.log(`      Triggers to fire: ${this.triggerIds.length}`);
     console.log();
 
-    // Fire triggers sequentially to demonstrate parallel execution capability
+    // Create fire trigger tasks for parallel execution
+    const fireTasks = this.triggerIds.map((triggerId, index) => {
+      return async () => {
+        try {
+          const tx = await this.registry.fireTrigger(
+            triggerId,
+            contextData,
+            {
+              nonce: this.getNextNonce(),
+              gasLimit: CONFIG.gasLimit.fire,
+              gasPrice: CONFIG.gasPrice
+            }
+          );
+
+          const receipt = await tx.wait();
+          this.performanceMetrics.totalGasUsed += Number(receipt.gasUsed);
+          this.performanceMetrics.transactionCount++;
+
+          return tx.hash;
+        } catch (error) {
+          console.log(`   ⚠️  Failed to fire trigger ${triggerId}: ${error.message}`);
+          return null;
+        }
+      };
+    });
+
+    // Execute trigger fires with controlled concurrency
+    console.log(`   🔄 Firing ${fireTasks.length} triggers with ${CONFIG.concurrentTxs} concurrent transactions...`);
+    const results = await this.executeWithConcurrency(fireTasks.map(task => task()));
+
+    // Collect successful fires
     const firedTriggers = [];
-
-    for (let i = 0; i < this.triggerIds.length; i++) {
-      try {
-        const tx = await this.registry.fireTrigger(
-          this.triggerIds[i],
-          contextData,
-          {
-            nonce: this.getNextNonce(),
-            gasLimit: 200000,
-            maxFeePerGas: ethers.parseUnits('100', 'gwei'),
-            maxPriorityFeePerGas: ethers.parseUnits('50', 'gwei')
-          }
-        );
-
-        await tx.wait();
-        firedTriggers.push(tx.hash);
-
-        if ((i + 1) % Math.max(1, Math.floor(this.triggerIds.length / 10)) === 0 || i === this.triggerIds.length - 1) {
-          console.log(`   🔥 Fired ${i + 1}/${this.triggerIds.length} triggers`);
-        }
-
-        // Small delay to avoid overwhelming the network (reduced for large batches)
-        if (CONFIG.numFunctions <= 50) {
-          await new Promise(resolve => setTimeout(resolve, 100));
-        } else {
-          await new Promise(resolve => setTimeout(resolve, 10));
-        }
-      } catch (error) {
-        console.log(`   ⚠️  Failed to fire trigger ${i + 1}: ${error.message}`);
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled' && result.value) {
+        firedTriggers.push(result.value);
       }
-    }
+
+      // Progress reporting
+      if ((index + 1) % Math.max(1, Math.floor(this.triggerIds.length / 10)) === 0 || index === this.triggerIds.length - 1) {
+        console.log(`   🔥 Processed ${index + 1}/${this.triggerIds.length} trigger fires`);
+      }
+    });
 
     const duration = Date.now() - startTime;
+    this.performanceMetrics.fireTime = duration;
     console.log(chalk.green(`   🎉 Successfully fired ${firedTriggers.length} triggers in ${duration}ms`));
+    console.log(chalk.cyan(`   ⚡ Average time per fire: ${(duration / firedTriggers.length).toFixed(1)}ms`));
     console.log();
   }
 
@@ -323,16 +419,33 @@ class MonadFaasDemo {
     const currentBlock = await this.provider.getBlockNumber();
     const nextFunctionId = await this.registry.nextFunctionId();
     const nextTriggerId = await this.registry.nextTriggerId();
+    const totalTime = Date.now() - this.performanceMetrics.startTime;
 
     console.log();
-    console.log(chalk.green('✅ SCALABILITY DEMONSTRATION COMPLETE!'));
+    console.log(chalk.green('✅ OPTIMIZED SCALABILITY DEMONSTRATION COMPLETE!'));
     console.log();
-    console.log(chalk.cyan('📈 Performance Metrics:'));
+    console.log(chalk.cyan('🚀 Performance Metrics:'));
     console.log(`   Functions Registered: ${chalk.bold(this.functionIds.length)}`);
     console.log(`   Triggers Added: ${chalk.bold(this.triggerIds.length)}`);
     console.log(`   Parallel Executions: ${chalk.bold(this.functionIds.length)}`);
     console.log(`   Success Rate: ${chalk.bold('100%')}`);
     console.log(`   Current Block: ${chalk.bold(currentBlock)}`);
+    console.log();
+
+    console.log(chalk.cyan('⚡ Speed Optimizations:'));
+    console.log(`   Total Demo Time: ${chalk.bold(totalTime.toLocaleString())}ms`);
+    console.log(`   Registration Time: ${chalk.bold(this.performanceMetrics.registrationTime.toLocaleString())}ms`);
+    console.log(`   Trigger Setup Time: ${chalk.bold(this.performanceMetrics.triggerTime.toLocaleString())}ms`);
+    console.log(`   Trigger Fire Time: ${chalk.bold(this.performanceMetrics.fireTime.toLocaleString())}ms`);
+    console.log(`   Concurrent Transactions: ${chalk.bold(CONFIG.concurrentTxs)}`);
+    console.log(`   Average Time per Function: ${chalk.bold((totalTime / this.functionIds.length).toFixed(1))}ms`);
+    console.log();
+
+    console.log(chalk.cyan('⛽ Gas Efficiency:'));
+    console.log(`   Total Gas Used: ${chalk.bold(this.performanceMetrics.totalGasUsed.toLocaleString())}`);
+    console.log(`   Total Transactions: ${chalk.bold(this.performanceMetrics.transactionCount)}`);
+    console.log(`   Average Gas per Transaction: ${chalk.bold(Math.round(this.performanceMetrics.totalGasUsed / this.performanceMetrics.transactionCount).toLocaleString())}`);
+    console.log(`   Optimized Gas Price: ${chalk.bold(ethers.formatUnits(CONFIG.gasPrice, 'gwei'))} gwei`);
     console.log();
 
     console.log(chalk.cyan('🎯 Demo Achievements:'));

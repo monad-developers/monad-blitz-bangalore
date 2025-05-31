@@ -7,6 +7,15 @@
     "demo": "node demo-script.js",
     "demo:small": "node demo-script.js --functions=5",
     "demo:large": "node demo-script.js --functions=150",
+    "demo:turbo": "node turbo-demo.js --functions=20",
+    "demo:turbo-mode": "node turbo-demo.js --functions=20 --turbo",
+    "demo:ultra": "node turbo-demo.js --functions=50 --turbo",
+    "demo:enhanced": "node enhanced-demo.js --functions=100",
+    "demo:stress": "node enhanced-demo.js --functions=200 --stress-test",
+    "demo:analytics": "node enhanced-demo.js --functions=50 --output=metrics.json",
+    "benchmark": "node performance-benchmark.js",
+    "benchmark:quick": "node performance-benchmark.js --quick",
+    "dashboard": "cd dashboard && npm start",
     "verify": "cast call 0x5FbDB2315678afecb367f032d93F642f64180aa3 \"nextFunctionId()\" --rpc-url http://localhost:8545"
   },
   "dependencies": {

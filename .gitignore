@@ -434,3 +434,7 @@ Assets/AssetStoreTools*
 # Reaper
 *.rpp
 
+# Presentation and Documentation Files
+PRESENTATION_GUIDE.txt
+QUICK_REFERENCE.txt
+

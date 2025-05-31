@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Clock } from 'lucide-react';
 
 const PRTimer = ({ endTime, onExpired }) => {
@@ -9,8 +9,14 @@ const PRTimer = ({ endTime, onExpired }) => {
     seconds: 0,
     isExpired: false,
   });
+  
+  // Use ref to track if onExpired has already been called
+  const expiredCallbackFired = useRef(false);
 
   useEffect(() => {
+    // Reset the callback fired flag when endTime changes
+    expiredCallbackFired.current = false;
+    
     const calculateTimeLeft = () => {
       const now = new Date().getTime();
       const endTimeMs = new Date(endTime).getTime();
@@ -38,7 +44,9 @@ const PRTimer = ({ endTime, onExpired }) => {
           isExpired: true,
         });
         
-        if (onExpired) {
+        // Only call onExpired once when timer first expires
+        if (onExpired && !expiredCallbackFired.current) {
+          expiredCallbackFired.current = true;
           onExpired();
         }
       }

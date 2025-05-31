@@ -19,6 +19,9 @@ const Home = () => {
   // Refs to prevent rapid successive calls
   const lastFetchTime = useRef(0);
   const lastStatsTime = useRef(0);
+  const lastUpdateCall = useRef(0); // Add ref to track update calls
+  const fetchNFTsRef = useRef(); // Store latest fetchNFTs
+  const fetchStatsRef = useRef(); // Store latest fetchStats
   
   const filters = [
     { key: 'all', label: 'All NFTs', icon: '🎨' },
@@ -99,6 +102,10 @@ const Home = () => {
       // Don't show toast for stats errors to avoid spam
     }
   }, []);
+
+  // Store latest function references
+  fetchNFTsRef.current = fetchNFTs;
+  fetchStatsRef.current = fetchStats;
 
   // Initial fetch - run immediately on mount
   useEffect(() => {
@@ -206,13 +213,21 @@ const Home = () => {
   };
 
   const handleNFTUpdate = useCallback(() => {
+    const now = Date.now();
+    // Debounce update calls - minimum 3 seconds between calls
+    if (now - lastUpdateCall.current < 3000) {
+      console.log('⏰ Skipping NFT update - too soon after last call');
+      return;
+    }
+    lastUpdateCall.current = now;
+    
     console.log('🔄 Handle NFT Update called');
-    fetchNFTs(); // Don't force, let debouncing handle it
+    fetchNFTsRef.current(); // Use ref to get latest function
     // Only fetch stats occasionally, not on every update
     if (Date.now() - lastStatsTime.current > 10000) { // Only if stats are older than 10 seconds
-      fetchStats();
+      fetchStatsRef.current();
     }
-  }, [fetchNFTs, fetchStats]);
+  }, []); // Remove dependencies to prevent recreation
 
   return (
     <div className="min-h-screen bg-gray-50">

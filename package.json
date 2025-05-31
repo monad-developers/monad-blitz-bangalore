@@ -1,0 +1,27 @@
+{
+  "name": "monad-faas-demo",
+  "version": "1.0.0",
+  "description": "MonadFaas Scalability Demo - 100 parallel function executions",
+  "main": "demo-script.js",
+  "scripts": {
+    "demo": "node demo-script.js",
+    "demo:small": "node demo-script.js --functions=5",
+    "demo:large": "node demo-script.js --functions=150",
+    "verify": "cast call 0x5FbDB2315678afecb367f032d93F642f64180aa3 \"nextFunctionId()\" --rpc-url http://localhost:8545"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "dotenv": "^16.5.0",
+    "ethers": "^6.14.3"
+  },
+  "keywords": [
+    "blockchain",
+    "serverless",
+    "faas",
+    "monad",
+    "scalability",
+    "demo"
+  ],
+  "author": "MonadBot",
+  "license": "MIT"
+}

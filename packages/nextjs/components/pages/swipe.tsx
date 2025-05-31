@@ -12,7 +12,37 @@ import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { HfInference } from "@huggingface/inference";
 import { usePrivy } from "@privy-io/react-auth";
+import { useWallets } from '@privy-io/react-auth';
+import { createWalletClient, custom, parseAbi } from 'viem';
 const inference = new HfInference(process.env.NEXT_PUBLIC_HUGGING_FACE_API);
+
+const MONASWIPE_ADDRESS = '0xA5cceBdb0D491c0f5e1d502718A04Bad70924D30';
+const WMON_ADDRESS = '0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701';
+
+// ABIs
+const ERC20_ABI = parseAbi([
+  'function approve(address spender, uint256 amount) returns (bool)',
+  'function balanceOf(address account) external view returns (uint256)'
+]);
+
+const MONASWIPE_ABI = parseAbi([
+  'function swapMonToToken(address _token, uint256 _monAmount, uint256 _minTokens) external',
+  'function swapTokenToMon(address _token, uint256 _tokenAmount, uint256 _minMON) external',
+  'event SwapMONToToken(address indexed user, uint256 monAmount, address token)',
+  'event SwapTokenToMON(address indexed user, uint256 tokenAmount, address token)'
+]);
+
+const monadTestnet = {
+  id: 10143,
+  name: 'Monad Testnet',
+  network: 'monad-testnet',
+  nativeCurrency: { decimals: 18, name: 'MON', symbol: 'MON' },
+  rpcUrls: { default: { http: ['https://testnet-rpc.monad.xyz/'] } },
+  blockExplorers: {
+    default: { name: 'Monad Explorer', url: 'https://testnet.monadexplorer.com/' }
+  }
+};
+
 
 import { gql, request } from "graphql-request";
 const query = gql`
@@ -60,6 +90,68 @@ export function SwipePage({ category }: { category: string }) {
   const [trustScore, setTrustScore] = useState(0);
   const [tokenbought, setTokenBought] = useState(false);
   const { ready, authenticated, user, login, logout } = usePrivy();
+  const { wallets } = useWallets();
+  const embeddedWallet = wallets.find(w => w.walletClientType === 'privy');
+
+  const getClient = async () => {
+    if (embeddedWallet == undefined) {
+      return null;
+    }
+    const provider = await embeddedWallet.getEthereumProvider();
+    return createWalletClient({
+      chain: monadTestnet, // Use the Monad config from previous example
+      transport: custom(provider)
+    });
+  };
+
+  const approveToken = async (tokenAddress: any, spender: any, amount: string) => {
+    const client = await getClient();
+    if (client == undefined) {
+      return null;
+    }
+
+    const [account] = await client.getAddresses();
+
+    return client.writeContract({
+      address: tokenAddress,
+      abi: ERC20_ABI,
+      functionName: 'approve',
+      args: [spender, BigInt(amount)],
+      account
+    });
+  };
+
+  const handleSwapMonToToken = async () => {
+    try {
+      // setLoading(true);
+      const client = await getClient();
+      if (client == undefined) {
+        return null;
+      }
+      const [account] = await client.getAddresses();
+
+      // 1. Approve WMON spending
+      await approveToken(WMON_ADDRESS, MONASWIPE_ADDRESS, '100000000');
+
+      // 2. Execute swap
+      const txHash = await client.writeContract({
+        address: MONASWIPE_ADDRESS,
+        abi: MONASWIPE_ABI,
+        functionName: 'swapMonToToken',
+        args: [
+          '0xE0590015A873bF326bd645c3E1266d4db41C4E6B',
+          BigInt(100000000),
+          BigInt(10000)
+        ],
+        account
+      });
+
+      console.log('Swap successful:', txHash);
+    } finally {
+      // setLoading(false);
+    }
+  };
+
 
   useEffect(() => {
     const callHuggingFace = async () => {
@@ -116,28 +208,30 @@ export function SwipePage({ category }: { category: string }) {
     try {
       const currentToken = tokenProfiles[currentIndex];
 
-      const addressOfToken = currentToken.tokenAddress;
-      const response = await fetch("/api/fetch-wallet", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ addressOfToken }), // Send addressToBuy as part of the request body
-      });
+      await handleSwapMonToToken();
 
-      const dataa = await response.json();
+      // const addressOfToken = currentToken.tokenAddress;
+      // const response = await fetch("/api/fetch-wallet", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({ addressOfToken }), // Send addressToBuy as part of the request body
+      // });
 
-      console.log("data from the contract", dataa);
-      if (!dataa.success) {
-        throw new Error(dataa.error || "Contract call failed");
-      }
+      // const dataa = await response.json();
 
-      // Update wallet data with contract call results
-      console.log(dataa);
+      // console.log("data from the contract", dataa);
+      // if (!dataa.success) {
+      //   throw new Error(dataa.error || "Contract call failed");
+      // }
 
-      // GETTING THE LAST TX HASH by the user from subgraph
-      const address = (data as Data)?.swapETHToTokens[0].id;
-      console.log(address);
+      // // Update wallet data with contract call results
+      // console.log(dataa);
+
+      // // GETTING THE LAST TX HASH by the user from subgraph
+      // const address = (data as Data)?.swapETHToTokens[0].id;
+      // console.log(address);
 
       await addCoinToPortfolio(
         session?.user?.email as string,

@@ -6,6 +6,7 @@
 
 2. Give it your project name, a one-liner description, make sure you are forking `main` branch and click `Create Fork`.
 
+
 ![image](https://github.com/user-attachments/assets/ffdebab7-c340-4e14-bd3c-36905f1016a3)
 
 3. In your fork you can make all the changes you want, add code of your project, create branches, add information to `README.md`, you can change anything and everything.

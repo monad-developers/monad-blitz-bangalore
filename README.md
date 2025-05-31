@@ -1,33 +1,56 @@
-# Monad Blitz Bangalore Submission Process
+# <img src="assets/logo.png" width="23px" alt="logo"> Monaswipe
+## Gamified Token Discovery on Monad Blockchain
 
-1. Visit the `monad-blitz-bangalore` repo (link here) and fork it.
+Monaswipe is a decentralized application (Dapp) that revolutionizes token discovery and trading with a Tinder-style swipe interface, built on the Monad blockchain. Explore curated token categories, swipe to buy, or manage your portfolio seamlessly.
 
-![image](https://github.com/user-attachments/assets/ab46b2ea-ee0f-4237-87ef-c33bb1a94749)
+## 🌟 Features
 
-2. Give it your project name, a one-liner description, make sure you are forking `main` branch and click `Create Fork`.
+- **Swipe to Discover**:  
+  - Swipe right to instantly purchase tokens via backend swaps and smart contract interactions.  
+  - Swipe left to skip tokens and remove them from view.  
 
-![image](https://github.com/user-attachments/assets/ffdebab7-c340-4e14-bd3c-36905f1016a3)
+- **Curated Token Categories**:  
+  - Solid Meme Coins  
+  - Risky Degen  
+  - Newly Launched  
+  - Blue Chips  
+  - Community Favorites  
 
-3. In your fork you can make all the changes you want, add code of your project, create branches, add information to `README.md`, you can change anything and everything.
+- **Portfolio Management**:  
+  View and manage purchased tokens, with options to sell or increase holdings.  
 
-4. Once you are done with your project and ready for submission, create a pull request.
+- **Seamless User Experience**:  
+  Powered by Monad’s high-throughput, low-latency EVM-compatible blockchain.
 
-![image](https://github.com/user-attachments/assets/58aa7140-55db-49db-9361-332449dbe116)
 
-![image](https://github.com/user-attachments/assets/5c8c61b1-23fd-4177-b06e-e8fca3a61ad4)
+## 🛠 Tech Stack
 
-5. Make sure you are create a pull request to the right repo `monad-developers/monad-blitz-bangalore`.
+- **Frontend**: Next.js, Tailwind CSS  
+- **Backend**: Mongoose (MongoDB) for user preferences and swipe history  
+- **Smart Contracts**: Solidity for token swaps and transaction logic  
+- **Platform**: Monad blockchain (EVM-compatible)
 
-![image](https://github.com/user-attachments/assets/41774ebc-d64c-43de-b3be-7e46d21bcaba)
 
-6. Make sure you see “Able to merge”, when creating a pull request then you can click `Create Pull Request`.
+## 💸 Potential Revenue Streams
 
-![image](https://github.com/user-attachments/assets/b52f5e6f-9091-43af-9025-f2c61a7d1205)
+1. **Platform Fee**:  
+   A small fee (e.g., 1%) on every token swap executed through the platform.  
 
-7. Give the pull request your project name and a description of the project (describe as much as you can about your project you can even add video demo links) then click `Create pull request`.
+2. **Premium Features**:  
+   - Advanced analytics and token recommendations  
+   - Early access to newly launched tokens  
 
-![image](https://github.com/user-attachments/assets/9a3cc30a-498f-4d83-9060-adb11f88eff6)
+3. **Sponsored Tokens**:  
+   Projects pay to feature their tokens in specific categories for increased visibility.
 
-8. Finally verify if you created your pull request correctly by checking the repo on which the pull request is created and the source and destination branch of the pull request!
 
-![image](https://github.com/user-attachments/assets/b16befcd-2c29-4520-aa70-29883306e85c)
+## 👥 Team
+
+- **Lokeshwaran B** – Project Manager & Smart Contract Developer  
+  📧 [lokeshwaran100@gmail.com](mailto:lokeshwaran100@gmail.com) | [X](https://x.com/cryptowithloki)  
+
+- **Adithya NG** – Full Stack Developer  
+  📧 [adithyanandi099@gmail.com](mailto:adithyanandi099@gmail.com) | [X](https://x.com/_Adithya_n_g)  
+
+- **Abhin S Krishna** – Smart Contract Developer  
+  📧 [unniskrishna3@gmail.com](mailto:unniskrishna3@gmail.com) | [X](https://x.com/abhinskrishna)

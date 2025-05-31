@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Web3Provider } from "@/components/Web3Provider";
+import { DisputeChat } from "@/components/DisputeChat";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Gigs from "./pages/Gigs";
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
+        <DisputeChat />
       </TooltipProvider>
     </QueryClientProvider>
   </Web3Provider>

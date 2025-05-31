@@ -1,21 +1,60 @@
-import "@rainbow-me/rainbowkit/styles.css";
-import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
-import { ThemeProvider } from "~~/components/ThemeProvider";
-import "~~/styles/globals.css";
-import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
+import './globals.css'
+import { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import { ThemeProvider } from '@/components/providers/theme-provider'
+import { TokenProvider } from '@/components/providers/token-provider'
+import { getSession } from 'next-auth/react'
+import Providers from '@/components/providers/provider'
+import { Toaster } from '@/components/ui/toaster'
+import SubProviders from "./Providers";
+import { Menu } from '@/components/ui/menu'
+import { PrivyProvider } from '@privy-io/react-auth';
 
-export const metadata = getMetadata({ title: "Scaffold-ETH 2 App", description: "Built with 🏗 Scaffold-ETH 2" });
+const inter = Inter({ subsets: ["latin"] });
 
-const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <html suppressHydrationWarning>
-      <body>
-        <ThemeProvider enableSystem>
-          <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
-        </ThemeProvider>
-      </body>
-    </html>
-  );
+export const metadata: Metadata = {
+  title: "MonaSwipe - Crypto Trading Made Simple",
+  description: "Swipe right on your next crypto investment",
+  metadataBase: new URL("https://monadswipe.example.com"),
 };
 
-export default ScaffoldEthApp;
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  let session;
+  getSession()
+    .then((data) => {
+      session = data;
+    })
+    .catch((err) => console.log(err));
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Providers session={session}>
+
+            <PrivyProvider
+              appId={"cmbc3dx8z00ggjm0nlf7mnbjl"}
+              onSuccess={(user: any) => console.log(`User ${user.id} logged in!`)}
+            >
+            <TokenProvider>
+              <SubProviders>
+                {children}
+                <Toaster />
+                <Menu />
+              </SubProviders>
+            </TokenProvider>
+          </PrivyProvider>
+        </Providers>
+      </ThemeProvider>
+    </body>
+    </html >
+  );
+}

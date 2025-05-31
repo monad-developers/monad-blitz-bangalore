@@ -1,9 +1,7 @@
 # <img src="assets/logo.png" width="23px" alt="logo"> Monaswipe
-# Gamified Token Discovery on Monad Blockchain
+## Gamified Token Discovery on Monad Blockchain
 
 Monaswipe is a decentralized application (Dapp) that revolutionizes token discovery and trading with a Tinder-style swipe interface, built on the Monad blockchain. Explore curated token categories, swipe to buy, or manage your portfolio seamlessly.
-
----
 
 ## 🌟 Features
 
@@ -24,7 +22,6 @@ Monaswipe is a decentralized application (Dapp) that revolutionizes token discov
 - **Seamless User Experience**:  
   Powered by Monad’s high-throughput, low-latency EVM-compatible blockchain.
 
----
 
 ## 🛠 Tech Stack
 
@@ -33,7 +30,6 @@ Monaswipe is a decentralized application (Dapp) that revolutionizes token discov
 - **Smart Contracts**: Solidity for token swaps and transaction logic  
 - **Platform**: Monad blockchain (EVM-compatible)
 
----
 
 ## 💸 Potential Revenue Streams
 
@@ -47,7 +43,6 @@ Monaswipe is a decentralized application (Dapp) that revolutionizes token discov
 3. **Sponsored Tokens**:  
    Projects pay to feature their tokens in specific categories for increased visibility.
 
----
 
 ## 👥 Team
 
@@ -59,5 +54,3 @@ Monaswipe is a decentralized application (Dapp) that revolutionizes token discov
 
 - **Abhin S Krishna** – Smart Contract Developer  
   📧 [unniskrishna3@gmail.com](mailto:unniskrishna3@gmail.com) | [X](https://x.com/abhinskrishna)
-
----

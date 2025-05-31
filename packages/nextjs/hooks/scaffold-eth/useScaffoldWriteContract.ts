@@ -188,3 +188,4 @@ export function useScaffoldWriteContract<TContractName extends ContractName>(
     writeContract: sendContractWriteTx,
   };
 }
+

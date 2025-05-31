@@ -68,41 +68,54 @@ cp .env.example .env
 PRIVATE_KEY=0xYourPrivateKeyHere
 ```
 
-### 3. Verify Setup
+### 3. Run Demo
 ```bash
-node verify-setup.js
+# Quick test (5 functions)
+npm run demo:small
+
+# Standard demo (20 functions)
+npm run demo
+
+# High performance demo (50 functions)
+npm run demo:large
 ```
 
-### 4. Run Demo
-```bash
-# Run a single function demo
-node demo-script.js --functions=1
+## 🎮 Optimized Demo Scripts
 
-# Run larger scale demo
-node demo-script.js --functions=10
+### Quick Start Demos
+```bash
+# Small scale test (5 functions)
+npm run demo:small
+
+# Standard demo (20 functions)
+npm run demo
+
+# High performance turbo mode (20 functions)
+npm run demo:turbo
+
+# Large scale demo (50 functions)
+npm run demo:large
 ```
 
-## 🎮 Demo Scripts
-
-### Live Testnet Demo
+### Advanced Performance Demos
 ```bash
-# Single function test
-node demo-script.js --functions=1
+# Enhanced analytics demo (100 functions)
+npm run demo:enhanced
 
-# Scale test with multiple functions
-node demo-script.js --functions=20
+# Stress test (200 functions)
+npm run demo:stress
+
+# Analytics export with metrics
+npm run demo:analytics
 ```
 
-### Local Development Demo
+### Performance Benchmarking
 ```bash
-# Requires local Anvil blockchain
-node demo-local.js --functions=5
-```
+# Full performance benchmark
+npm run benchmark
 
-### Optimized Gas Demo
-```bash
-# Demonstrates gas optimization features
-node optimized-demo.js --functions=10
+# Quick benchmark test
+npm run benchmark:quick
 ```
 
 ## 🌐 Web Dashboard
@@ -121,26 +134,6 @@ Features:
 - Monitor function execution
 - Manage triggers and events
 - View gas usage statistics
-
-## 🛠️ CLI Interface
-
-Use the command-line interface for developer workflows:
-
-```bash
-cd cli
-
-# Initialize new function
-npm run dev -- init my-function
-
-# Build function
-npm run dev -- build
-
-# Deploy function
-npm run dev -- deploy
-
-# Check status
-npm run dev -- status
-```
 
 ## 📊 Smart Contracts
 
@@ -177,9 +170,8 @@ forge test
 cd dashboard
 npm test
 
-# CLI tests
-cd cli
-npm test
+# Demo script tests
+npm run benchmark:quick
 ```
 
 ## 📈 Performance Metrics
@@ -211,10 +203,10 @@ npm test
 
 ## 📚 Documentation
 
-- `PRESENTATION_GUIDE.txt` - Demo presentation guide
-- `QUICK_REFERENCE.txt` - Essential commands reference
+- `DEPLOYMENT_GUIDE.md` - Comprehensive deployment guide
 - `contracts/README.md` - Smart contract documentation
 - `dashboard/README.md` - Frontend documentation
+- Performance benchmarks available via `npm run benchmark`
 
 ## 🤝 Contributing
 

@@ -85,9 +85,10 @@ out
 .nuxt
 dist
 
-# Gatsby files
+# Gatsby files (exclude dashboard)
 .cache/
-public
+/public
+!dashboard/public/
 
 # Storybook build outputs
 .out
@@ -114,8 +115,10 @@ artifacts
 cache
 coverage
 
-# Truffle
-build/
+# Truffle (exclude dashboard)
+/build/
+contracts/build/
+!dashboard/build/
 
 # Remix IDE
 .deps/
@@ -434,7 +437,15 @@ Assets/AssetStoreTools*
 # Reaper
 *.rpp
 
-# Presentation and Documentation Files
-PRESENTATION_GUIDE.txt
-QUICK_REFERENCE.txt
+# Dashboard Components - Force Include All Files
+!dashboard/
+!dashboard/**/*
+!dashboard/src/
+!dashboard/src/**/*
+!dashboard/public/
+!dashboard/public/**/*
+!dashboard/build/
+!dashboard/build/**/*
+!dashboard/node_modules/
+!dashboard/node_modules/**/*
 

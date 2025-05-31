@@ -1,8 +1,7 @@
-
-import React from 'react';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Button } from '@/components/ui/button';
-import { Wallet } from 'lucide-react';
+import React from "react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { Button } from "@/components/ui/button";
+import { Wallet } from "lucide-react";
 
 export const WalletButton: React.FC = () => {
   return (
@@ -18,22 +17,21 @@ export const WalletButton: React.FC = () => {
       }) => {
         // Note: If your app doesn't use authentication, you
         // can remove all 'authenticationStatus' checks
-        const ready = mounted && authenticationStatus !== 'loading';
+        const ready = mounted && authenticationStatus !== "loading";
         const connected =
           ready &&
           account &&
           chain &&
-          (!authenticationStatus ||
-            authenticationStatus === 'authenticated');
+          (!authenticationStatus || authenticationStatus === "authenticated");
 
         return (
           <div
             {...(!ready && {
-              'aria-hidden': true,
-              'style': {
+              "aria-hidden": true,
+              style: {
                 opacity: 0,
-                pointerEvents: 'none',
-                userSelect: 'none',
+                pointerEvents: "none",
+                userSelect: "none",
               },
             })}
           >
@@ -62,25 +60,24 @@ export const WalletButton: React.FC = () => {
                 <div className="flex gap-2">
                   <Button
                     onClick={openChainModal}
-                    variant="outline"
-                    className="border-white/20 text-white hover:bg-white/10"
+                    className="bg-white/10 hover:bg-white/20 text-white border-0"
                   >
                     {chain.hasIcon && (
                       <div
                         style={{
                           background: chain.iconBackground,
-                          width: 12,
-                          height: 12,
+                          width: 16,
+                          height: 16,
                           borderRadius: 999,
-                          overflow: 'hidden',
-                          marginRight: 4,
+                          overflow: "hidden",
+                          marginRight: 6,
                         }}
                       >
                         {chain.iconUrl && (
                           <img
-                            alt={chain.name ?? 'Chain icon'}
+                            alt={chain.name ?? "Chain icon"}
                             src={chain.iconUrl}
-                            style={{ width: 12, height: 12 }}
+                            style={{ width: 16, height: 16 }}
                           />
                         )}
                       </div>
@@ -95,7 +92,7 @@ export const WalletButton: React.FC = () => {
                     {account.displayName}
                     {account.displayBalance
                       ? ` (${account.displayBalance})`
-                      : ''}
+                      : ""}
                   </Button>
                 </div>
               );

@@ -1,7 +1,0 @@
-ConnectView {
-    max-height: 600px;
-}
-
-.modal--landscape ConnectView {
-    max-height: 300px;
-}

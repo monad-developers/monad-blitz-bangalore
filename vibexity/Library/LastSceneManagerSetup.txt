@@ -1,5 +1,0 @@
-sceneSetups:
-- path: Assets/Thirdweb/Examples/Scenes/Scene_Playground.unity
-  isLoaded: 1
-  isActive: 1
-  isSubScene: 0

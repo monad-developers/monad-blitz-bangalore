@@ -33,7 +33,7 @@ const config: HardhatUserConfig = {
           optimizer: {
             enabled: true,
             // https://docs.soliditylang.org/en/latest/using-the-compiler.html#optimizer-options
-            runs: 200,
+            runs: 1,
           },
         },
       },
@@ -55,14 +55,14 @@ const config: HardhatUserConfig = {
         enabled: process.env.MAINNET_FORKING_ENABLED === "true",
       },
     },
-    mainnet: {
-      url: `https://eth-mainnet.alchemyapi.io/v2/${providerApiKey}`,
-      accounts: [deployerPrivateKey],
-    },
-    sepolia: {
-      url: `https://eth-sepolia.g.alchemy.com/v2/${providerApiKey}`,
-      accounts: [deployerPrivateKey],
-    },
+    // mainnet: {
+    //   url: `https://eth-mainnet.alchemyapi.io/v2/${providerApiKey}`,
+    //   accounts: [deployerPrivateKey],
+    // },
+    // sepolia: {
+    //   url: `https://eth-sepolia.g.alchemy.com/v2/${providerApiKey}`,
+    //   accounts: [deployerPrivateKey],
+    // },
     // Monad Testnet Configuration
     monadTestnet: {
       url: "https://testnet-rpc.monad.xyz",

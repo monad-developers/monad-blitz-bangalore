@@ -3,12 +3,12 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { Contract } from "ethers";
 
 /**
- * Deploys a contract named "YourContract" using the deployer account and
+ * Deploys a contract named "CleanChain" using the deployer account and
  * constructor arguments set to the deployer address
  *
  * @param hre HardhatRuntimeEnvironment object.
  */
-const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+const deployCleanChain: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   /*
     On localhost, the deployer account is the one that comes with Hardhat, which is already funded.
 
@@ -22,7 +22,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  await deploy("YourContract", {
+  await deploy("CleanChain", {
     from: deployer,
     // Contract constructor arguments
     args: [deployer],
@@ -33,12 +33,15 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   });
 
   // Get the deployed contract to interact with it after deploying.
-  const yourContract = await hre.ethers.getContract<Contract>("YourContract", deployer);
-  console.log("👋 Initial greeting:", await yourContract.greeting());
+  const cleanChain = await hre.ethers.getContract<Contract>("CleanChain", deployer);
+  console.log("🌿 CleanChain deployed! Owner:", await cleanChain.owner());
+  console.log("🏠 Total houses:", await cleanChain.getTotalHouses());
+  console.log("🧹 Total cleaners:", await cleanChain.getTotalCleaners());
+  console.log("🏘️ Total neighborhoods:", await cleanChain.getTotalNeighborhoods());
 };
 
-export default deployYourContract;
+export default deployCleanChain;
 
 // Tags are useful if you have multiple deploy files and only want to run one of them.
-// e.g. yarn deploy --tags YourContract
-deployYourContract.tags = ["YourContract"];
+// e.g. yarn deploy --tags CleanChain
+deployCleanChain.tags = ["CleanChain"];

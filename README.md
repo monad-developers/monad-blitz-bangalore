@@ -1,33 +1,95 @@
-# Monad Blitz Bangalore Submission Process
+# GhostPass
 
-1. Visit the `monad-blitz-bangalore` repo (link here) and fork it.
+GhostPass is a privacy-focused platform for **anonymous wallet verification** on the blockchain. It enables users to prove wallet ownership and display their verification status without revealing personal information.
 
-![image](https://github.com/user-attachments/assets/ab46b2ea-ee0f-4237-87ef-c33bb1a94749)
+## Features
 
-2. Give it your project name, a one-liner description, make sure you are forking `main` branch and click `Create Fork`.
+- **Wallet Verification**: Users can cryptographically verify their Ethereum wallet to prove ownership.
+- **Anonymous Identity**: No personal details are collected—only wallet addresses and blockchain transaction hashes are stored.
+- **Verification Status Lookup**: Anyone can check the verification status of any wallet address.
+- **Batch and Revoke Support**: Admins can batch-verify or revoke verification from wallets.
+- **Web Interface**: Modern Next.js frontend for a seamless user experience.
 
-![image](https://github.com/user-attachments/assets/ffdebab7-c340-4e14-bd3c-36905f1016a3)
+## How it Works
 
-3. In your fork you can make all the changes you want, add code of your project, create branches, add information to `README.md`, you can change anything and everything.
+### 1. Connect & Verify Wallet
 
-4. Once you are done with your project and ready for submission, create a pull request.
+- Users connect their Ethereum wallet (MetaMask or similar).
+- To verify, users sign a message (challenge) with their wallet.
+- The backend verifies the signature and, if valid, submits a verification transaction to a smart contract.
+- The wallet address, verification timestamp, and blockchain transaction hash are logged for future checks.
 
-![image](https://github.com/user-attachments/assets/58aa7140-55db-49db-9361-332449dbe116)
+### 2. Displaying Verified Users
 
-![image](https://github.com/user-attachments/assets/5c8c61b1-23fd-4177-b06e-e8fca3a61ad4)
+- The backend maintains a list of verified users, each entry containing:
+  - `address`: The Ethereum wallet address.
+  - `verifiedAt`: Timestamp of verification.
+  - `transactionHash`: Blockchain hash of the verification transaction.
+- Anyone can query `/verified-users` (API) or use the frontend to see which wallets are verified.
 
-5. Make sure you are create a pull request to the right repo `monad-developers/monad-blitz-bangalore`.
+### 3. Check Verification Status
 
-![image](https://github.com/user-attachments/assets/41774ebc-d64c-43de-b3be-7e46d21bcaba)
+- Users (or third parties) can check if any wallet is verified by entering the address in the UI.
+- The backend/API will return:
+  - Whether the address is verified.
+  - The verification timestamp (if available).
+  - The transaction hash of the verification.
 
-6. Make sure you see “Able to merge”, when creating a pull request then you can click `Create Pull Request`.
+## Technology Stack
 
-![image](https://github.com/user-attachments/assets/b52f5e6f-9091-43af-9025-f2c61a7d1205)
+- **Frontend**: Next.js (React), TypeScript
+- **Backend**: Node.js, Express, ethers.js
+- **Blockchain**: Ethereum (Hardhat for smart contract deployment/testing)
+- **Wallets**: MetaMask or any EIP-1193-compatible wallet
 
-7. Give the pull request your project name and a description of the project (describe as much as you can about your project you can even add video demo links) then click `Create pull request`.
+## API Endpoints
 
-![image](https://github.com/user-attachments/assets/9a3cc30a-498f-4d83-9060-adb11f88eff6)
+- `POST /verify`: Verify a wallet address
+  - Request: `{ walletAddress: string, signature: string, message: string }`
+- `GET /verify/:address`: Check verification status of a wallet address
+- `GET /verified-users`: List all verified wallet addresses
+- `POST /revoke`: Admin-only, revoke verification for a wallet
 
-8. Finally verify if you created your pull request correctly by checking the repo on which the pull request is created and the source and destination branch of the pull request!
+## Local Development
 
-![image](https://github.com/user-attachments/assets/b16befcd-2c29-4520-aa70-29883306e85c)
+### Backend
+
+```bash
+cd backend
+npm install
+# Configure .env with RPC URL, contract address, private key, etc.
+npm start
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+# Visit http://localhost:3000
+```
+
+### Blockchain (Hardhat)
+
+```bash
+cd blockchain
+npm install
+npx hardhat test
+npx hardhat node
+npx hardhat ignition deploy ./ignition/modules/Lock.ts
+```
+
+## Security & Privacy
+
+- No personal data is ever stored. Only wallet addresses and blockchain proof.
+- All verifications are on-chain, and revocation is supported.
+- Users can check the verification status of any address at any time.
+
+## License
+
+MIT
+
+---
+
+Feel free to contribute! Open issues and PRs are welcome.

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(DefaultTargetFrameworks)</TargetFrameworks>
+        <PackageVersion>$(DefaultVersion)</PackageVersion>
+        <AssemblyVersion>$(DefaultVersion)</AssemblyVersion>
+        <PackageId>Reown.Sign.Nethereum.Unity</PackageId>
+        <Title>Reown.Sign.Nethereum.Unity</Title>
+        <Authors>skibitsky</Authors>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Reown.Sign.Nethereum\Reown.Sign.Nethereum.csproj"/>
+        <ProjectReference Include="..\Reown.Sign.Unity\Reown.Sign.Unity.csproj"/>
+    </ItemGroup>
+
+</Project>

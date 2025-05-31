@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(DefaultTargetFrameworks)</TargetFrameworks>
+        <PackageVersion>$(DefaultVersion)</PackageVersion>
+        <AssemblyVersion>$(DefaultVersion)</AssemblyVersion>
+        <PackageId>Reown.AppKit.Unity</PackageId>
+        <Title>Reown.AppKit.Unity</Title>
+        <Authors>skibitsky</Authors>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Reown.Sign.Nethereum.Unity\Reown.Sign.Nethereum.Unity.csproj"/>
+        <ProjectReference Include="..\Reown.Sign.Unity\Reown.Sign.Unity.csproj"/>
+        <Reference Include="UnityEngine">
+            <HintPath>$(UnityDllPath)</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="ZXing.Net"/>
+    </ItemGroup>
+
+</Project>

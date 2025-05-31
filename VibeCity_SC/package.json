@@ -1,0 +1,16 @@
+{
+  "name": "vibecity_sc",
+  "version": "1.0.0",
+  "description": "## Overview The Launch Pass Project is a smart contract system built on the Ethereum blockchain that implements ERC-1155 tokens. It provides a versatile solution for managing various utility tokens, including discount tokens, creator share tokens, and badge NFTs. This project includes a factory contract for deploying new instances of the LaunchPass contract, allowing for easy management and scalability.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

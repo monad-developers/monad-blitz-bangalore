@@ -63,6 +63,18 @@ const config: HardhatUserConfig = {
       url: `https://eth-sepolia.g.alchemy.com/v2/${providerApiKey}`,
       accounts: [deployerPrivateKey],
     },
+    // Monad Testnet Configuration
+    monadTestnet: {
+      url: "https://testnet-rpc.monad.xyz",
+      accounts: [deployerPrivateKey],
+      chainId: 10143,
+      verify: {
+        etherscan: {
+          apiUrl: "https://testnet.monadexplorer.com",
+          apiKey: "no-api-key-needed", // Monad explorer doesn't require API key
+        },
+      },
+    },
     arbitrum: {
       url: `https://arb-mainnet.g.alchemy.com/v2/${providerApiKey}`,
       accounts: [deployerPrivateKey],

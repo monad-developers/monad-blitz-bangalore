@@ -1,4 +1,4 @@
-# <img src="doc/logo.png" width="23px" alt="logo"> Monaswipe
+# <img src="assets/logo.png" width="23px" alt="logo"> Monaswipe
 # Gamified Token Discovery on Monad Blockchain
 
 Monaswipe is a decentralized application (Dapp) that revolutionizes token discovery and trading with a Tinder-style swipe interface, built on the Monad blockchain. Explore curated token categories, swipe to buy, or manage your portfolio seamlessly.

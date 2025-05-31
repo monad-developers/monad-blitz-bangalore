@@ -119,3 +119,20 @@
 .link:hover {
   opacity: 80%;
 }
+
+/* Web3 Gradient Background */
+.web3-gradient-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 0%, rgba(0, 255, 120, 0.18) 0%, transparent 80%),
+    radial-gradient(ellipse 50% 30% at 80% 10%, rgba(0, 255, 120, 0.12) 0%, transparent 80%),
+    radial-gradient(ellipse 80% 60% at 50% 80%, rgba(0, 255, 120, 0.1) 0%, transparent 80%),
+    linear-gradient(120deg, rgba(0, 255, 120, 0.08) 0%, rgba(0, 0, 0, 0) 100%);
+  /* Optional: subtle grid lines */
+  /* background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 40px); */
+  filter: blur(0.5px);
+}

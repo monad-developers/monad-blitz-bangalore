@@ -1,0 +1,16 @@
+[profile]
+src = 'src'
+out = 'out'
+libs = 'lib'
+test = 'test'
+script = 'script'
+
+[profile.default]
+compiler = 'solc'
+version = '0.8.20'
+optimizer = true
+optimizer_runs = 200
+
+[profile.env]
+ETH_RPC_URL = 'http://localhost:8545'
+PRIVATE_KEY = 'your_private_key_here'

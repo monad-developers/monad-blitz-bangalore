@@ -108,25 +108,25 @@ export const healthAPI = {
 // Error handling interceptor
 api.interceptors.response.use(
   (response) => {
-    console.log('🔄 API Response:', {
-      url: response.config.url,
-      status: response.status,
-      data: response.data
-    });
+    // Only log important endpoints, not every API call
+    if (response.config.url.includes('/nfts') && !response.config.url.includes('/stats')) {
+      console.log('📦 NFT API Response:', {
+        url: response.config.url,
+        status: response.status,
+        count: response.data?.data?.nfts?.length || 'unknown'
+      });
+    }
     return response;
   },
   (error) => {
-    console.error('💥 API Error Details:', {
+    console.error('💥 API Error:', {
       url: error.config?.url,
       method: error.config?.method,
       status: error.response?.status,
-      statusText: error.response?.statusText,
-      data: error.response?.data,
       message: error.message
     });
     
     const message = error.response?.data?.error || error.message || 'An error occurred';
-    console.error('❌ Final Error Message:', message);
     throw new Error(message);
   }
 );

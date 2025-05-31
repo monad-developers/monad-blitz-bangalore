@@ -1,0 +1,451 @@
+# MonadFaas Project .gitignore
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Private Keys and Secrets
+*.key
+*.pem
+private-keys/
+secrets/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Grunt intermediate storage
+.grunt
+
+# Bower dependency directory
+bower_components
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons
+build/Release
+
+# Dependency directories
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+out
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files (exclude dashboard)
+.cache/
+/public
+!dashboard/public/
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# Logs
+logs
+*.log
+
+# Foundry & Solidity
+cache/
+out/
+broadcast/
+artifacts/
+typechain/
+typechain-types/
+
+# Hardhat
+artifacts
+cache
+coverage
+
+# Truffle (exclude dashboard)
+/build/
+contracts/build/
+!dashboard/build/
+
+# Remix IDE
+.deps/
+
+# Solidity coverage
+coverage.json
+coverageEnv
+
+# Gas reports
+gas-report.txt
+
+# Slither
+.slither/
+
+# Mythril
+.mythril/
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Test files
+test-results/
+test-output/
+
+# Documentation build
+docs/_build/
+
+# Python (if any Python scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Rust (if any Rust components)
+target/
+Cargo.lock
+
+# Go (if any Go components)
+vendor/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Deployment artifacts
+deployment/
+deploy-output/
+
+# Local development
+local/
+dev/
+
+# Monitoring and analytics
+analytics/
+metrics/
+
+# Temporary build files
+*.tmp
+*.temp
+
+# Package files
+*.tar.gz
+*.zip
+*.rar
+
+# Lock files (keep package-lock.json but ignore others)
+yarn.lock
+pnpm-lock.yaml
+
+# WASM files (compiled)
+*.wasm
+
+# Binary files
+*.bin
+*.exe
+
+# Archive files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Video files
+*.mp4
+*.avi
+*.mov
+*.wmv
+
+# Audio files
+*.mp3
+*.wav
+*.flac
+
+# Image files (large ones)
+*.psd
+*.ai
+
+# Fonts
+*.ttf
+*.otf
+*.woff
+*.woff2
+
+# Certificate files
+*.crt
+*.cert
+*.ca-bundle
+
+# Configuration overrides
+config.local.*
+settings.local.*
+
+# Performance monitoring
+.clinic/
+profile/
+
+# Webpack
+.webpack/
+
+# Rollup
+.rollup.cache/
+
+# Vite
+.vite/
+
+# SvelteKit
+.svelte-kit/
+
+# Astro
+.astro/
+
+# Turborepo
+.turbo/
+
+# Vercel
+.vercel/
+
+# Netlify
+.netlify/
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+
+# Supabase
+.supabase/
+
+# Planetscale
+.pscale/
+
+# Railway
+.railway/
+
+# Fly.io
+fly.toml
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Kubernetes
+*.kubeconfig
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Ansible
+*.retry
+
+# Vagrant
+.vagrant/
+
+# Local history
+.history/
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# NetBeans
+nbproject/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Xcode
+*.xcodeproj
+*.xcworkspace
+
+# Android Studio
+.gradle/
+local.properties
+
+# iOS
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# React Native
+.expo/
+.expo-shared/
+
+# Flutter
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+Assets/AssetStoreTools*
+
+# Blender
+*.blend1
+*.blend2
+
+# FBX
+*.fbx
+
+# 3D Studio Max
+*.max
+
+# Maya
+*.ma
+*.mb
+
+# Cinema 4D
+*.c4d
+
+# ZBrush
+*.ztl
+
+# Substance
+*.sbs
+*.sbsar
+
+# Houdini
+*.hip
+*.hipnc
+
+# Nuke
+*.nk
+
+# After Effects
+*.aep
+
+# Premiere Pro
+*.prproj
+
+# Final Cut Pro
+*.fcpxmld
+
+# DaVinci Resolve
+*.drp
+
+# Avid Media Composer
+*.avp
+
+# Pro Tools
+*.ptx
+
+# Logic Pro
+*.logic
+
+# Ableton Live
+*.als
+
+# FL Studio
+*.flp
+
+# Cubase
+*.cpr
+
+# Reaper
+*.rpp
+
+# Dashboard Components - Force Include All Files
+!dashboard/
+!dashboard/**/*
+!dashboard/src/
+!dashboard/src/**/*
+!dashboard/public/
+!dashboard/public/**/*
+!dashboard/build/
+!dashboard/build/**/*
+!dashboard/node_modules/
+!dashboard/node_modules/**/*
+

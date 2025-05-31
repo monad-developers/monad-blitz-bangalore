@@ -8,6 +8,7 @@ import Providers from '@/components/providers/provider'
 import { Toaster } from '@/components/ui/toaster'
 import SubProviders from "./Providers";
 import { Menu } from '@/components/ui/menu'
+import { PrivyProvider } from '@privy-io/react-auth';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,15 +39,22 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Providers session={session}>
+
+            <PrivyProvider
+              appId={"cmbc3dx8z00ggjm0nlf7mnbjl"}
+              onSuccess={(user: any) => console.log(`User ${user.id} logged in!`)}
+            >
             <TokenProvider>
-              <SubProviders>{children}   
-                <Toaster />           
+              <SubProviders>
+                {children}
+                <Toaster />
                 <Menu />
               </SubProviders>
             </TokenProvider>
-          </Providers>
-        </ThemeProvider>
-      </body>
-    </html>
+          </PrivyProvider>
+        </Providers>
+      </ThemeProvider>
+    </body>
+    </html >
   );
 }

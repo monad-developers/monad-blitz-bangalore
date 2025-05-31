@@ -11,6 +11,7 @@ import { addCoinToPortfolio } from "@/lib/dbOperations";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { HfInference } from "@huggingface/inference";
+import { usePrivy } from "@privy-io/react-auth";
 const inference = new HfInference(process.env.NEXT_PUBLIC_HUGGING_FACE_API);
 
 import { gql, request } from "graphql-request";
@@ -58,6 +59,7 @@ export function SwipePage({ category }: { category: string }) {
   });
   const [trustScore, setTrustScore] = useState(0);
   const [tokenbought, setTokenBought] = useState(false);
+  const { ready, authenticated, user, login, logout } = usePrivy();
 
   useEffect(() => {
     const callHuggingFace = async () => {

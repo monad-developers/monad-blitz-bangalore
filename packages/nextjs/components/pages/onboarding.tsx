@@ -8,6 +8,7 @@ import { ArrowRight, LogIn, Menu } from 'lucide-react'
 import { createUser } from '@/lib/dbOperations'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePrivy } from "@privy-io/react-auth";
 
 export function OnboardingPage() {
   const router = useRouter()
@@ -15,6 +16,7 @@ export function OnboardingPage() {
   const [defaultAmount, setDefaultAmount] = useState('')
   const [walletAddress, setWalletAddress] = useState('')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { ready, authenticated, user, login, logout } = usePrivy();
 
   useEffect(() => {
     console.log(session);
@@ -119,7 +121,8 @@ export function OnboardingPage() {
           >
             {!session ? (
               <button
-                onClick={() => signIn('google')}
+                // onClick={() => signIn('google')}
+                onClick={() => login}
                 className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 text-white rounded-lg p-3 md:p-4 hover:opacity-90 transition text-sm md:text-base"
               >
                 <LogIn className="w-4 h-4 md:w-5 md:h-5" />

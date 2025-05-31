@@ -1,33 +1,267 @@
-# Monad Blitz Bangalore Submission Process
+# ChainJump 🎮⛓️
 
-1. Visit the `monad-blitz-bangalore` repo (link here) and fork it.
+**ChainJump** is a decentralized hyper-casual platformer gaming platform built on the Monad blockchain. Create, publish, and play custom platformer games while earning cryptocurrency rewards. Fair, transparent, and community-driven gaming for everyone.
 
-![image](https://github.com/user-attachments/assets/ab46b2ea-ee0f-4237-87ef-c33bb1a94749)
+![ChainJump Banner](https://img.shields.io/badge/ChainJump-Blockchain%20Gaming-purple?style=for-the-badge)
 
-2. Give it your project name, a one-liner description, make sure you are forking `main` branch and click `Create Fork`.
+## 🌟 Features
 
-![image](https://github.com/user-attachments/assets/ffdebab7-c340-4e14-bd3c-36905f1016a3)
+### 🎨 Game Creation Studio
+- **Visual Level Editor**: Drag-and-drop level designer with 27x11 grid
+- **Symbol Palette**: Complete set of game elements (platforms, enemies, coins, spikes, etc.)
+- **Live Preview**: Real-time game testing with Kaboom.js engine
+- **Preset Levels**: Load from existing game templates
+- **Export/Import**: Save games as JSON files
 
-3. In your fork you can make all the changes you want, add code of your project, create branches, add information to `README.md`, you can change anything and everything.
+### 🎮 Gaming Platform
+- **Play-to-Earn**: Earn MONAD tokens by playing games
+- **Multiple Game Modes**: Featured games, tournaments, and leaderboards
+- **Wallet Integration**: Seamless MetaMask connection
+- **Real-time Gameplay**: Smooth platformer mechanics with physics
 
-4. Once you are done with your project and ready for submission, create a pull request.
+### ⛓️ Blockchain Integration
+- **Smart Contract Publishing**: Deploy games directly to Monad blockchain
+- **Decentralized Storage**: Games stored on-chain for permanence
+- **Cryptocurrency Rewards**: MONAD token economy
+- **Transparent Gameplay**: Verifiable game mechanics and rewards
 
-![image](https://github.com/user-attachments/assets/58aa7140-55db-49db-9361-332449dbe116)
+### 🏆 Community Features
+- **Leaderboards**: Global player rankings [COMING SOON]
+- **Tournaments**: Competitive gaming events [COMING SOON]
+- **Creator Economy**: Game creators earn from player fees
+- **Social Gaming**: Share and discover community-created games
 
-![image](https://github.com/user-attachments/assets/5c8c61b1-23fd-4177-b06e-e8fca3a61ad4)
+## 🚀 Quick Start
 
-5. Make sure you are create a pull request to the right repo `monad-developers/monad-blitz-bangalore`.
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+- MetaMask wallet
+- MONAD testnet tokens
 
-![image](https://github.com/user-attachments/assets/41774ebc-d64c-43de-b3be-7e46d21bcaba)
+### Installation
 
-6. Make sure you see “Able to merge”, when creating a pull request then you can click `Create Pull Request`.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/chainjump.git
+   cd chainjump
+   ```
 
-![image](https://github.com/user-attachments/assets/b52f5e6f-9091-43af-9025-f2c61a7d1205)
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-7. Give the pull request your project name and a description of the project (describe as much as you can about your project you can even add video demo links) then click `Create pull request`.
+3. **Start development server**
+   ```bash
+   npm run dev
+   ```
 
-![image](https://github.com/user-attachments/assets/9a3cc30a-498f-4d83-9060-adb11f88eff6)
+4. **Open in browser**
+   ```
+   http://localhost:3000
+   ```
 
-8. Finally verify if you created your pull request correctly by checking the repo on which the pull request is created and the source and destination branch of the pull request!
+### Wallet Setup
 
-![image](https://github.com/user-attachments/assets/b16befcd-2c29-4520-aa70-29883306e85c)
+1. **Install MetaMask** browser extension
+2. **Add Monad Testnet** network:
+   - Network Name: `Monad Testnet`
+   - RPC URL: `https://testnet-rpc.monad.xyz`
+   - Chain ID: `10143`
+   - Currency Symbol: `MONAD`
+   - Block Explorer: `https://testnet.monadexplorer.com/`
+
+3. **Get testnet tokens** from the Monad faucet
+
+## 🎯 How to Use
+
+### Playing Games
+
+1. **Connect Wallet**: Click "Connect Wallet" and approve MetaMask connection
+2. **Browse Games**: Explore featured games, tournaments, or leaderboards
+3. **Pay Entry Fee**: Games require MONAD tokens to play
+4. **Play & Earn**: Complete levels to earn rewards and climb leaderboards
+
+### Creating Games
+
+1. **Access Creator**: Navigate to `/create` page
+2. **Design Levels**: Use the visual editor to create platformer levels
+3. **Set Parameters**: Configure game name, difficulty, and entry fee
+4. **Test Gameplay**: Use live preview to test your levels
+5. **Publish to Blockchain**: Deploy your game as a smart contract
+
+### Game Elements
+
+| Symbol | Element | Description |
+|--------|---------|-------------|
+| `⬜` | Empty | Empty space |
+| `🟩` | Grass Platform | Solid grass platform |
+| `⬛` | Steel Platform | Steel platform |
+| `🟫` | Bag Block | Solid bag block |
+| `🪙` | Coin | Collectible coin |
+| `📦` | Prize Block | Hit for power-ups |
+| `🔺` | Spike | Dangerous spikes |
+| `🍎` | Apple | Power-up apple |
+| `👻` | Enemy | Moving enemy |
+| `🌀` | Portal | Level exit portal |
+
+## 🏗️ Technical Architecture
+
+### Frontend Stack
+- **Next.js 15**: React framework with App Router
+- **TypeScript**: Type-safe development
+- **Tailwind CSS**: Utility-first styling
+- **Radix UI**: Accessible component library
+- **Kaboom.js**: Game engine for platformer mechanics
+
+### Blockchain Stack
+- **Monad Blockchain**: High-performance EVM-compatible chain
+- **Ethers.js**: Ethereum library for smart contract interaction
+- **MetaMask**: Wallet connection and transaction signing
+- **Smart Contracts**: Game factory and individual game contracts
+
+### Key Components
+
+```
+src/
+├── app/                    # Next.js app router pages
+│   ├── page.tsx           # Homepage with featured games
+│   ├── create/            # Game creation studio
+│   ├── play/              # Game browser and tournaments
+│   └── game/[gamekey]/    # Individual game player
+├── lib/                   # Utility libraries
+│   ├── wallet.ts          # Wallet connection logic
+│   └── smartContract.ts   # Blockchain interaction
+├── components/            # Reusable UI components
+└── types/                 # TypeScript type definitions
+```
+
+## 🔧 Smart Contract Integration
+
+### Game Factory Contract
+- **Address**: `0x456F88C4A2F6dA77B78FB93AafD57306efaD186f`
+- **Network**: Monad Testnet
+- **Function**: `createGameWithLevelsAndCost(string gameName, string[][] levels, uint256 costOfPlay)`
+
+### Publishing Flow
+1. Game data formatted as `string[][]` arrays
+2. Entry fee converted to wei (MONAD * 10^18)
+3. Smart contract deployment via MetaMask transaction
+4. Game becomes playable on the platform
+
+## 🎮 Game Data Format
+
+Games are stored as JSON with the following structure:
+
+```json
+{
+  "0x001": {
+    "Levels": {
+      "LevelsCount": 4,
+      "Levels": [
+        [
+          "    0       ",
+          "   --       ",
+          "       $$   ",
+          " %    ===   ",
+          "            ",
+          "   ^^  > = @",
+          "============"
+        ]
+      ]
+    }
+  }
+}
+```
+
+## 🛠️ Development
+
+### Available Scripts
+
+```bash
+npm run dev      # Start development server
+npm run build    # Build for production
+npm run start    # Start production server
+npm run lint     # Run ESLint
+```
+
+### Project Structure
+
+- **Pages**: Next.js app router structure
+- **Components**: Reusable UI components with Tailwind CSS
+- **Lib**: Utility functions for wallet and smart contract interaction
+- **Public**: Static assets including game sprites and level data
+
+### Adding New Games
+
+1. Create level data in `public/data/levels.json`
+2. Add game metadata to featured games array
+3. Ensure proper game key mapping
+
+## 🎨 Assets
+
+### Sprites
+- Player character (bean)
+- Platforms (grass, steel, bag)
+- Collectibles (coins, apples)
+- Enemies (ghosty)
+- Hazards (spikes)
+- Interactive elements (portals, prize blocks)
+
+### Audio
+- Background music
+- Sound effects for actions
+- Ambient game sounds
+
+## 🌐 Deployment
+
+### Vercel (Recommended)
+1. Connect GitHub repository to Vercel
+2. Configure environment variables
+3. Deploy automatically on push
+
+### Manual Deployment
+```bash
+npm run build
+npm run start
+```
+
+## 🤝 Contributing
+
+1. **Fork the repository**
+2. **Create feature branch**: `git checkout -b feature/amazing-feature`
+3. **Commit changes**: `git commit -m 'Add amazing feature'`
+4. **Push to branch**: `git push origin feature/amazing-feature`
+5. **Open Pull Request**
+
+### Development Guidelines
+- Follow TypeScript best practices
+- Use Tailwind CSS for styling
+- Ensure wallet integration works properly
+- Test smart contract interactions on testnet
+- Maintain responsive design
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- **Monad Testnet Explorer**: [https://testnet.monadexplorer.com/address/0x456F88C4A2F6dA77B78FB93AafD57306efaD186f?tab=Transaction&portfolio=Info](https://testnet.monadexplorer.com/address/0x456F88C4A2F6dA77B78FB93AafD57306efaD186f?tab=Transaction&portfolio=Info)
+
+
+
+## 🙏 Acknowledgments
+
+- **Monad Labs** for the high-performance blockchain
+- **Kaboom.js** for the excellent game engine
+- **Next.js** team for the amazing framework
+- **Radix UI** for accessible components
+- **Tailwind CSS** for utility-first styling
+
+---
+
+**Built with ❤️ for the Monad Hackathon**
+
+*Create. Play. Win. On-chain.*

@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e6c13ad2.css",
+    "main.js": "/static/js/main.aa0e0dd7.js",
+    "static/js/453.2240ab1c.chunk.js": "/static/js/453.2240ab1c.chunk.js",
+    "static/media/home-explorer-3.webp": "/static/media/home-explorer-3.d63a12169b271c1d4023.webp",
+    "static/media/home-explorer-1-mob.webp": "/static/media/home-explorer-1-mob.d26a41bf792796d4de4d.webp",
+    "static/media/home-explorer-2-mob.webp": "/static/media/home-explorer-2-mob.012b16af83353d606963.webp",
+    "static/media/home-explorer-4.webp": "/static/media/home-explorer-4.6f0c85ab93e2495a7a76.webp",
+    "static/media/home-benefits-4.webp": "/static/media/home-benefits-4.a864be99a1365bf5d833.webp",
+    "static/media/home-benefits-2.webp": "/static/media/home-benefits-2.91ff1bc91f97e2783497.webp",
+    "static/media/home-explorer-5-mob.webp": "/static/media/home-explorer-5-mob.e8c40cbd48a821ecef67.webp",
+    "static/media/home-benefits-1.webp": "/static/media/home-benefits-1.bfc6d6adc114ab330e4f.webp",
+    "static/media/home-benefits-3.webp": "/static/media/home-benefits-3.4e98e27a436204831c6b.webp",
+    "index.html": "/index.html",
+    "main.e6c13ad2.css.map": "/static/css/main.e6c13ad2.css.map",
+    "main.aa0e0dd7.js.map": "/static/js/main.aa0e0dd7.js.map",
+    "453.2240ab1c.chunk.js.map": "/static/js/453.2240ab1c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.aa0e0dd7.js"
+  ]
+}

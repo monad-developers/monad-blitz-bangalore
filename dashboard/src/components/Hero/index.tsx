@@ -1,6 +1,5 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import NavBar from './Nav';
 import HeroContent from './Content';
 import DashboardModel from './DashboardModel';
 import { theme } from '../../styles/theme';
@@ -104,7 +103,6 @@ const Hero: React.FC = () => {
       <FloatingOrb className="orb1" />
       <FloatingOrb className="orb2" />
       <ContentWrapper>
-        <NavBar />
         <MainContentContainer>
           <LeftContent>
             <HeroContent />
@@ -118,4 +116,4 @@ const Hero: React.FC = () => {
   );
 };
 
-export default Hero; 
+export default Hero;

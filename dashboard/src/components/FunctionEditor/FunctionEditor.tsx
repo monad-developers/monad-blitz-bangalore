@@ -379,7 +379,9 @@ const FunctionEditor: React.FC<FunctionEditorProps> = ({ isOpen, onClose, onDepl
   const [triggerConfig, setTriggerConfig] = useState('{"token": "ARB/USDC", "threshold": 0.75}');
   const [webhookUrl, setWebhookUrl] = useState('');
   const [isDeploying, setIsDeploying] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error' | 'info', text: string } | null>(null);
+  const [lastDeployedFunction, setLastDeployedFunction] = useState<{ functionId: number, triggerId: number } | null>(null);
   
   const editorRef = useRef<any>(null);
 
@@ -389,16 +391,83 @@ const FunctionEditor: React.FC<FunctionEditorProps> = ({ isOpen, onClose, onDepl
     setFunctionName(FUNCTION_TEMPLATES[template].name);
   };
 
+  const handleTestFunction = async () => {
+    if (!lastDeployedFunction) {
+      setStatusMessage({ type: 'error', text: 'No deployed function to test. Please deploy a function first.' });
+      toast.error('No deployed function to test');
+      return;
+    }
+
+    setIsTesting(true);
+    setStatusMessage({ type: 'info', text: 'Testing function execution...' });
+    toast.loading('Testing function...', { id: 'test' });
+
+    try {
+      const testData = { testMode: true, timestamp: Date.now() };
+      
+      const response = await fetch(`${API_BASE_URL}/api/functions/${lastDeployedFunction.functionId}/test`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          triggerId: lastDeployedFunction.triggerId,
+          testData
+        })
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.error || 'Test execution failed');
+      }
+
+      const { txHash, gasUsed, status } = result.data;
+
+      setStatusMessage({
+        type: 'success',
+        text: `✅ Function test completed!\n• Status: ${status}\n• Transaction: ${txHash}\n• Gas Used: ${gasUsed}`
+      });
+
+      toast.success(`Function test completed successfully!`, { id: 'test' });
+
+    } catch (error) {
+      console.error('Function test failed:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown test error';
+      setStatusMessage({
+        type: 'error',
+        text: `Test failed: ${errorMessage}`
+      });
+      toast.error(`Test failed: ${errorMessage}`, { id: 'test' });
+    } finally {
+      setIsTesting(false);
+    }
+  };
+
   const handleDeploy = async () => {
-    if (!functionName.trim() || !code.trim()) {
-      setStatusMessage({ type: 'error', text: 'Please provide function name and code' });
-      toast.error('Please provide function name and code');
+    // Enhanced validation
+    if (!functionName.trim()) {
+      setStatusMessage({ type: 'error', text: 'Function name is required' });
+      toast.error('Function name is required');
+      return;
+    }
+
+    if (!code.trim()) {
+      setStatusMessage({ type: 'error', text: 'Function code cannot be empty' });
+      toast.error('Function code cannot be empty');
+      return;
+    }
+
+    // Validate function name format
+    if (!/^[a-zA-Z0-9-_]+$/.test(functionName)) {
+      setStatusMessage({ type: 'error', text: 'Function name can only contain letters, numbers, hyphens, and underscores' });
+      toast.error('Invalid function name format');
       return;
     }
 
     setIsDeploying(true);
-    setStatusMessage({ type: 'info', text: 'Deploying function to Monad blockchain...' });
-    toast.loading('Deploying function...', { id: 'deploy' });
+    setStatusMessage({ type: 'info', text: 'Preparing function for deployment...' });
+    toast.loading('Deploying function to Monad blockchain...', { id: 'deploy' });
 
     try {
       // Validate trigger config JSON
@@ -406,28 +475,50 @@ const FunctionEditor: React.FC<FunctionEditorProps> = ({ isOpen, onClose, onDepl
       try {
         parsedTriggerConfig = JSON.parse(triggerConfig || '{}');
       } catch (error) {
-        throw new Error('Invalid trigger configuration JSON');
+        throw new Error('Invalid trigger configuration JSON. Please check your JSON syntax.');
+      }
+
+      // Validate webhook URL if provided
+      if (webhookUrl && webhookUrl.trim()) {
+        try {
+          new URL(webhookUrl);
+        } catch {
+          throw new Error('Invalid webhook URL format');
+        }
       }
 
       const functionData = {
-        name: functionName,
-        description: description || `${functionName} - Deployed via MonadFaas Editor`,
-        code,
+        name: functionName.trim(),
+        description: description.trim() || `${functionName} - Deployed via MonadFaas Editor`,
+        code: code.trim(),
         runtime: 'javascript',
         triggerType,
         triggerConfig: parsedTriggerConfig,
-        webhookUrl,
+        webhookUrl: webhookUrl.trim() || undefined,
         gasLimit: 500000
       };
 
-      // Deploy via API
+      setStatusMessage({ type: 'info', text: 'Sending deployment request to Monad blockchain...' });
+
+      // Deploy via API with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
+
       const response = await fetch(`${API_BASE_URL}/api/functions/deploy`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(functionData)
+        body: JSON.stringify(functionData),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
 
       const result = await response.json();
 
@@ -437,29 +528,53 @@ const FunctionEditor: React.FC<FunctionEditorProps> = ({ isOpen, onClose, onDepl
 
       const { functionId, triggerId, txHash, gasUsed } = result.data;
 
+      // Store deployed function info for testing
+      setLastDeployedFunction({ functionId, triggerId });
+
       setStatusMessage({
         type: 'success',
-        text: `Function deployed successfully! Function ID: ${functionId}, Trigger ID: ${triggerId}. Transaction: ${txHash}`
+        text: `🎉 Function deployed successfully!\n• Function ID: ${functionId}\n• Trigger ID: ${triggerId}\n• Transaction: ${txHash}\n• Gas Used: ${gasUsed}`
       });
 
-      toast.success(`Function deployed! ID: ${functionId}`, { id: 'deploy' });
+      toast.success(`Function "${functionName}" deployed successfully! ID: ${functionId}`, { 
+        id: 'deploy',
+        duration: 5000
+      });
 
       // Also call the original onDeploy for backward compatibility
-      await onDeploy(functionData);
+      try {
+        await onDeploy(functionData);
+      } catch (onDeployError) {
+        console.warn('onDeploy callback failed:', onDeployError);
+      }
 
       // Auto-close after successful deployment
       setTimeout(() => {
         onClose();
-      }, 3000);
+      }, 4000);
 
     } catch (error) {
       console.error('Deployment failed:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      let errorMessage = 'Unknown deployment error';
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          errorMessage = 'Deployment timeout - please try again';
+        } else if (error.message.includes('fetch')) {
+          errorMessage = 'Network error - please check your connection and try again';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
       setStatusMessage({
         type: 'error',
         text: `Deployment failed: ${errorMessage}`
       });
-      toast.error(`Deployment failed: ${errorMessage}`, { id: 'deploy' });
+      toast.error(`Deployment failed: ${errorMessage}`, { 
+        id: 'deploy',
+        duration: 8000
+      });
     } finally {
       setIsDeploying(false);
     }
@@ -499,9 +614,31 @@ const FunctionEditor: React.FC<FunctionEditorProps> = ({ isOpen, onClose, onDepl
               roundedSelection: false,
               scrollBeyondLastLine: false,
               automaticLayout: true,
+              wordWrap: 'on',
+              tabSize: 2,
+              insertSpaces: true,
+              quickSuggestions: true,
+              suggestOnTriggerCharacters: true,
+              acceptSuggestionOnEnter: 'on',
+              autoIndent: 'full',
+              formatOnPaste: true,
+              formatOnType: true,
+              bracketPairColorization: { enabled: true },
+              guides: {
+                bracketPairs: true,
+                indentation: true
+              }
             }}
             onMount={(editor) => {
               editorRef.current = editor;
+              
+              // Add custom keyboard shortcut for help
+              editor.addCommand(2080 /* Ctrl+H */, () => {
+                toast('Monad FaaS Context Help:\n\n• ctx.trigger - Trigger data\n• ctx.env - Environment variables\n• ctx.fetchTokenPrice(token) - Get token price\n• ctx.sendWebhook(url, data) - Send webhook\n• ctx.getBlockNumber() - Get current block\n• ctx.getGasPrice() - Get gas price\n• ctx.getGasUsed() - Get gas used', {
+                  duration: 8000,
+                  position: 'top-center'
+                });
+              });
             }}
           />
         </CodeEditorPanel>
@@ -568,6 +705,19 @@ const FunctionEditor: React.FC<FunctionEditorProps> = ({ isOpen, onClose, onDepl
           >
             {isDeploying ? 'Deploying...' : 'Deploy Function'}
           </DeployButton>
+
+          {lastDeployedFunction && (
+            <DeployButton 
+              onClick={handleTestFunction}
+              disabled={isTesting}
+              style={{ 
+                marginTop: '12px',
+                background: isTesting ? 'rgba(76, 205, 196, 0.3)' : 'linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%)'
+              }}
+            >
+              {isTesting ? 'Testing...' : 'Test Function'}
+            </DeployButton>
+          )}
 
           {statusMessage && (
             <StatusMessage type={statusMessage.type}>

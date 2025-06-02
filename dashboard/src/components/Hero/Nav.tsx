@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { theme } from '../../styles/theme';
 
@@ -94,12 +94,6 @@ const MobileMenuButton = styled.button`
   }
 `;
 
-const ChevronIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="6 9 12 15 18 9"></polyline>
-  </svg>
-);
-
 // Tenderly logo (simplified version)
 const TenderlyLogo = () => (
   <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -107,32 +101,14 @@ const TenderlyLogo = () => (
   </svg>
 );
 
-const NavBar: React.FC = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  return (
-    <NavContainer>
-      <Logo>
-        <LogoImg>
-          <TenderlyLogo />
-        </LogoImg>
-        <LogoText>tenderly</LogoText>
-      </Logo>
-      
-      <NavLinks>
-        <NavItem href="#">Product <ChevronIcon /></NavItem>
-        <NavItem href="#">Solutions <ChevronIcon /></NavItem>
-        <NavItem href="#">Learn <ChevronIcon /></NavItem>
-        <NavItem href="#">Pricing</NavItem>
-      </NavLinks>
-      
-      <DashboardButton href="#">Go to Dashboard</DashboardButton>
-      
-      <MobileMenuButton onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-        ☰
-      </MobileMenuButton>
-    </NavContainer>
-  );
+export {
+  NavContainer,
+  Logo,
+  LogoImg,
+  LogoText,
+  NavLinks,
+  NavItem,
+  DashboardButton,
+  MobileMenuButton,
+  TenderlyLogo
 };
-
-export default NavBar; 

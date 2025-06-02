@@ -112,7 +112,7 @@ npm run demo:ultra         # 50 functions in turbo mode
 5. Observe live updates during demo execution
 
 ## 📊 Performance Validation
-
+cd /home/aditya/Desktop/Repos/monad-blitz-bangalore && npm run launch
 ### Mock Test Flow
 ```bash
 # 1. Quick validation (5 functions)

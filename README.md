@@ -16,8 +16,8 @@ https://github.com/liyincode/immortal
 
 ### 可用的在线演示链接
 
-候选池页面链接: https://immortal-mepb393y5-pengqiangus-projects.vercel.app/main
-擂台页面链接: https://immortal-mepb393y5-pengqiangus-projects.vercel.app/battle
+候选池页面链接: https://immortal-five.vercel.app/main
+擂台页面链接: https://immortal-five.vercel.app/battle
 
 ### 所有部署在 Monad Testnet 的合约地址
 

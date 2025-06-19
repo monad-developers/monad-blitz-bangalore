@@ -1,0 +1,56 @@
+{
+  "name": "monad-faas-demo",
+  "version": "2.0.0",
+  "description": "MonadFaas - Optimized Serverless Computing Platform on Monad",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "concurrently \"npm run server:dev\" \"npm run dashboard:dev\"",
+    "launch": "node start-demo.js",
+    "test:integration": "node test-integration.js",
+    "server": "node server.js",
+    "server:dev": "nodemon server.js",
+    "demo": "node turbo-demo.js --functions=20",
+    "demo:small": "node turbo-demo.js --functions=5",
+    "demo:medium": "node turbo-demo.js --functions=20",
+    "demo:large": "node turbo-demo.js --functions=50 --turbo",
+    "demo:turbo": "node turbo-demo.js --functions=20 --turbo",
+    "demo:ultra": "node turbo-demo.js --functions=50 --turbo",
+    "demo:enhanced": "node enhanced-demo.js --functions=100",
+    "demo:stress": "node enhanced-demo.js --functions=200 --stress-test",
+    "demo:analytics": "node enhanced-demo.js --functions=50 --output=metrics.json",
+    "benchmark": "node performance-benchmark.js",
+    "benchmark:quick": "node performance-benchmark.js --quick",
+    "dashboard": "cd dashboard && npm start",
+    "dashboard:dev": "cd dashboard && REACT_APP_API_URL=http://localhost:3001 npm start",
+    "dashboard:build": "cd dashboard && npm run build",
+    "build": "npm run dashboard:build",
+    "postinstall": "cd dashboard && npm install"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "dotenv": "^16.5.0",
+    "ethers": "^6.14.3",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "ws": "^8.14.2",
+    "uuid": "^9.0.1",
+    "compression": "^1.7.4",
+    "helmet": "^7.1.0",
+    "axios": "^1.6.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "blockchain",
+    "serverless",
+    "faas",
+    "monad",
+    "scalability",
+    "demo"
+  ],
+  "author": "MonadBot",
+  "license": "MIT"
+}
